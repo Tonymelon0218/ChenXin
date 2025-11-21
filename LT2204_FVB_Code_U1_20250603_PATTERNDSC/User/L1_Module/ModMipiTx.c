@@ -317,6 +317,8 @@ void Mod_MipiTx_DataRateAdj()
         LTLog(LOG_INFO, "Burst Mode lane rate increase 80M");
     }
 
+    g_stMipiTx.ulMipiDataRate += 80000; // MIPI 速率增加80M
+
     if (g_stMipiTx.ulMipiDataRate < MIPITX_PLL_LOW) // set byteclk minium value to 50M , phyclk minium value is 400M
     {
         g_stMipiTx.ulMipiDataRate = MIPITX_PLL_LOW;

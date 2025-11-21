@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   MODDCS                                                            11/21/2025 11:03:14 PAGE 1   
+C51 COMPILER V9.60.0.0   MODDCS                                                            11/21/2025 11:27:23 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODDCS
 OBJECT MODULE PLACED IN .\Objects\ModDCS.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L1_Module\ModDCS.c LARGE OBJECTADVANCED OPTIMIZE
-                    -(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_01.ORC) BROWSE INCDIR(..\User\L
+                    -(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02.ORC) BROWSE INCDIR(..\User\L
                     -0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\ModDCS.lst) OBJECT(.\Objects\ModDCS.obj)
 
 line level    source
@@ -62,7 +62,7 @@ line level    source
   50          {
   51   1          Drv_MipiTx_Dsidcs_Init();
   52   1          Ocm_Delay1ms(20);
-C51 COMPILER V9.60.0.0   MODDCS                                                            11/21/2025 11:03:14 PAGE 2   
+C51 COMPILER V9.60.0.0   MODDCS                                                            11/21/2025 11:27:23 PAGE 2   
 
   53   1      
   54   1          Drv_MipiTx_DcsPktWrite(DCS_S1[0], sizeof(DCS_S1) - 1, &DCS_S1[1]);
@@ -76,7 +76,7 @@ line level    source
   62   1          Drv_MipiTx_DcsPktWrite(Display_On[0], (sizeof(Display_On) - 1), &Display_On[1]);
   63   1          Ocm_Delay1ms(150);
   64   1          Drv_MipiTx_DcsPktWrite(Sleep_Out[0], (sizeof(Sleep_Out) - 1), &Sleep_Out[1]);
-  65   1          Ocm_Delay1ms(150);
+  65   1          Ocm_Delay1ms(200);
   66   1      
   67   1          Drv_MipiTx_Dsidcs_End();
   68   1          LTLog(LOG_INFO, "Mipi DCS END");

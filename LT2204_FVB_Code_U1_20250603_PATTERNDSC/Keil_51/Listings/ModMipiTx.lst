@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 1   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODMIPITX
 OBJECT MODULE PLACED IN .\Objects\ModMipiTx.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L1_Module\ModMipiTx.c LARGE OBJECTADVANCED OPTIM
-                    -IZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_01.ORC) BROWSE INCDIR(..\Use
+                    -IZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02.ORC) BROWSE INCDIR(..\Use
                     -r\L0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\ModMipiTx.lst) OBJECT(.\Objects\ModMi
                     -piTx.obj)
 
@@ -62,7 +62,7 @@ line level    source
                       {CSI_YUV422_8Bit, 16, 0x01, 0x1E, MIPITX_CSI}, // 默认CSI
                       {CSI_YUV422_10Bit, 20, 0x31, 0x1F, MIPITX_CSI},
                       {CSI_YUV420_8Bit, 24, 0x20, 0x1A, MIPITX_CSI}
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 2   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 2   
 
               #endif
   54          };
@@ -126,7 +126,7 @@ line level    source
  112   2          case VIDEO_OFF_EVENT: // HDMIRX_VIDEO_OFF_EVENT DPRX_VIDEO_OFF_EVENT
  113   2              g_stMipiTx.b1UpstreamVideoReady = FALSE;
  114   2              LTLog(LOG_INFO, "RX Set Event:%02bx ", ucMsgType);
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 3   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 3   
 
  115   2              break;
  116   2          case VIDEO_ON_EVENT: // HDMIRX_VIDEO_ON_EVENT DPRX_VIDEO_ON_EVENT
@@ -190,7 +190,7 @@ line level    source
  174   2              {
  175   3                  if (g_stMipiTx.b1MIPITXStreamOn == OFF)
  176   3                  {
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 4   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 4   
 
  177   4                      ucMinState = min(ucMinState, STATE_MIPITX_VIDEO_OUT_5);
  178   4                      g_stMipiTx.b1MIPITXStreamOn = ON;
@@ -254,7 +254,7 @@ line level    source
                   if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
                   {
                       if (g_stMipiTx.ulMipiInClk > 600000) // over 4K60
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 5   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 5   
 
                       {
                           g_stMipiTx.ucTxPortNum = MIPI_2PORT; // TODO: 默认是CSI 8lane1901 如果超过600m
@@ -318,7 +318,7 @@ line level    source
  296   1          if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
  297   1          {
  298   2              g_stMipiTx.ulMipiDataRate = g_stMipiTx.ulMipiInClk * 2 * g_stMipiTx.ucBpp / (g_stMipiTx.ucTxPortNu
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 6   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 6   
 
              -m * g_stMipiTx.ucTxLaneNum);
  299   2          }
@@ -343,30 +343,32 @@ line level    source
  317   2              LTLog(LOG_INFO, "Burst Mode lane rate increase 80M");
  318   2          }
  319   1      
- 320   1          if (g_stMipiTx.ulMipiDataRate < MIPITX_PLL_LOW) // set byteclk minium value to 50M , phyclk minium val
+ 320   1          g_stMipiTx.ulMipiDataRate += 80000; // MIPI 速率增加80M
+ 321   1      
+ 322   1          if (g_stMipiTx.ulMipiDataRate < MIPITX_PLL_LOW) // set byteclk minium value to 50M , phyclk minium val
              -ue is 400M
- 321   1          {
- 322   2              g_stMipiTx.ulMipiDataRate = MIPITX_PLL_LOW;
- 323   2          }
- 324   1          if (g_stMipiTx.ulMipiDataRate > MIPITX_PLL_HIGH) // set byteclk maxmum value to 312.5M , phyclk maxmum
+ 323   1          {
+ 324   2              g_stMipiTx.ulMipiDataRate = MIPITX_PLL_LOW;
+ 325   2          }
+ 326   1          if (g_stMipiTx.ulMipiDataRate > MIPITX_PLL_HIGH) // set byteclk maxmum value to 312.5M , phyclk maxmum
              - value is 2.5G
- 325   1          {
- 326   2              g_stMipiTx.ulMipiDataRate = MIPITX_PLL_HIGH;
- 327   2          }
- 328   1      }
- 329          
- 330          void Mod_MipiTx_SetDataType(u8 ucVideoFormat)
- 331          {
- 332   1      #if MIPITX_PRO_SEL == MIPITX_DSI
- 333   1          u8 ucDataType = 0x3E;
- 334   1          u8 ucBppAndFmtSel = 0x21; // rgb 888
- 335   1      #else
+ 327   1          {
+ 328   2              g_stMipiTx.ulMipiDataRate = MIPITX_PLL_HIGH;
+ 329   2          }
+ 330   1      }
+ 331          
+ 332          void Mod_MipiTx_SetDataType(u8 ucVideoFormat)
+ 333          {
+ 334   1      #if MIPITX_PRO_SEL == MIPITX_DSI
+ 335   1          u8 ucDataType = 0x3E;
+ 336   1          u8 ucBppAndFmtSel = 0x21; // rgb 888
+ 337   1      #else
                   u8 ucDataType = 0x1E;
                   u8 ucBppAndFmtSel = 0x01; // CSI 422 8bit
               #endif
- 339   1          u8 ucIndex = 0;
- 340   1      
- 341   1      #if MIPITX_DSC != ENABLED
+ 341   1          u8 ucIndex = 0;
+ 342   1      
+ 343   1      #if MIPITX_DSC != ENABLED
                   for (ucIndex = 0; ucIndex < sizeof(g_MipiVideoFmtCfg) / sizeof(g_MipiVideoFmtCfg[0]); ucIndex++)
                   {
                       if (ucVideoFormat == g_MipiVideoFmtCfg[ucIndex].ucVideoFmt)
@@ -377,24 +379,24 @@ line level    source
                       }
                   }
               #else
- 352   1          // todo:
- 353   1          ucDataType = 0x0B;
- 354   1          ucBppAndFmtSel = 0x25;
- 355   1      #endif
- 356   1      
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 7   
+ 354   1          // todo:
+ 355   1          ucDataType = 0x0B;
+ 356   1          ucBppAndFmtSel = 0x25;
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 7   
 
- 357   1      #if RX_PORT_SIGN == DP_PORT
- 358   1      #if (DPRX_DSC_BYPASS_SUPPORT == ENABLED)
+ 357   1      #endif
+ 358   1      
+ 359   1      #if RX_PORT_SIGN == DP_PORT
+ 360   1      #if (DPRX_DSC_BYPASS_SUPPORT == ENABLED)
                   if (Drv_DpRxDscBy_SwitchGet() == ENABLED)
                   {
                       ucDataType = 0x0B;
                       ucBppAndFmtSel = 0x25;
                   }
               #endif
- 365   1      #endif
- 366   1      
- 367   1      #if RX_PORT_SIGN == HDMI_PORT
+ 367   1      #endif
+ 368   1      
+ 369   1      #if RX_PORT_SIGN == HDMI_PORT
               #if (HDMIRX_DSC_BYPASS_SUPPORT == ENABLED)
                   if (Drv_HdmiRxDscBy_SwitchGet() == ENABLED)
                   {
@@ -403,51 +405,51 @@ line level    source
                   }
               #endif
               #endif
- 376   1      
- 377   1          Drv_MipiTx_DataTypeSet(ucDataType, ucBppAndFmtSel);
- 378   1      }
-*** WARNING C280 IN LINE 330 OF ..\User\L1_Module\ModMipiTx.c: 'ucVideoFormat': unreferenced local variable
- 379          
- 380          void Mod_MipiTx_Resolution_Config()
- 381          {
- 382   1          // 获取timing信息
- 383   1          memset(&g_stMipiTxVideoTiming, 0, sizeof(StructTiming));
- 384   1          Drv_VideoCheckAll_Get(&g_stMipiTxVideoTiming);
- 385   1          LTLog(LOG_INFO, "RX[H]: Htotal:%d,Hactive:%d,Hsw:%d,Hfp:%d,Hbp:%d,Hspol:%bd", g_stMipiTxVideoTiming.Ht
+ 378   1      
+ 379   1          Drv_MipiTx_DataTypeSet(ucDataType, ucBppAndFmtSel);
+ 380   1      }
+*** WARNING C280 IN LINE 332 OF ..\User\L1_Module\ModMipiTx.c: 'ucVideoFormat': unreferenced local variable
+ 381          
+ 382          void Mod_MipiTx_Resolution_Config()
+ 383          {
+ 384   1          // 获取timing信息
+ 385   1          memset(&g_stMipiTxVideoTiming, 0, sizeof(StructTiming));
+ 386   1          Drv_VideoCheckAll_Get(&g_stMipiTxVideoTiming);
+ 387   1          LTLog(LOG_INFO, "RX[H]: Htotal:%d,Hactive:%d,Hsw:%d,Hfp:%d,Hbp:%d,Hspol:%bd", g_stMipiTxVideoTiming.Ht
              -otal, g_stMipiTxVideoTiming.Hactive, g_stMipiTxVideoTiming.Hsw, g_stMipiTxVideoTiming.Hfp, g_stMipiTxVideoTiming.Hbp, g_
              -stMipiTxVideoTiming.Hspol);
- 386   1          LTLog(LOG_INFO, "RX[V]: Vtotal:%d,Vactive:%d,Vsw:%d,Vfp:%d,Vbp:%d,Vspol:%bd", g_stMipiTxVideoTiming.Vt
+ 388   1          LTLog(LOG_INFO, "RX[V]: Vtotal:%d,Vactive:%d,Vsw:%d,Vfp:%d,Vbp:%d,Vspol:%bd", g_stMipiTxVideoTiming.Vt
              -otal, g_stMipiTxVideoTiming.Vactive, g_stMipiTxVideoTiming.Vsw, g_stMipiTxVideoTiming.Vfp, g_stMipiTxVideoTiming.Vbp, g_
              -stMipiTxVideoTiming.Vspol);
- 387   1          // 设置mipi timing信息
- 388   1          Drv_MipiTx_TimingSet(&g_stMipiTxVideoTiming);
- 389   1      
- 390   1          // 极性获取
- 391   1          Drv_MipiTx_InHSyncPol_Sel(g_stMipiTxVideoTiming.Hspol);
- 392   1          Drv_MipiTx_InVSyncPol_Sel(g_stMipiTxVideoTiming.Vspol);
- 393   1      }
- 394          
- 395          void Mod_MipiTx_Digital_Config()
- 396          {
- 397   1          Drv_MipiTx_Rst(ENABLED);
- 398   1          Drv_MipiTx_LaneSwap(); // if need adjust lane,please modify
- 399   1          Drv_MipiTx_PortSwap(g_stMipiTx.ucTxPortNum);
- 400   1          Drv_MipiTx_PortNumSet(g_stMipiTx.ucTxPortNum);
- 401   1          Drv_MipiTx_LaneNumSet(g_stMipiTx.ucTxLaneNum);
- 402   1          LTLog(LOG_INFO, "Port: %02bx, Lane: %02bx", g_stMipiTx.ucTxPortNum, g_stMipiTx.ucTxLaneNum);
- 403   1      #if MIPITX_PHY_SEL == MIPITX_CPHY
- 404   1          Drv_MipiTx_CPhyEn(ENABLED);
- 405   1          LTLog(LOG_INFO, "select Mipi Cphy");
- 406   1          // TODO: 这里没有clk 可以选择，数字和模拟都未提供，不影响Dphy以及非8lane Dphy
+ 389   1          // 设置mipi timing信息
+ 390   1          Drv_MipiTx_TimingSet(&g_stMipiTxVideoTiming);
+ 391   1      
+ 392   1          // 极性获取
+ 393   1          Drv_MipiTx_InHSyncPol_Sel(g_stMipiTxVideoTiming.Hspol);
+ 394   1          Drv_MipiTx_InVSyncPol_Sel(g_stMipiTxVideoTiming.Vspol);
+ 395   1      }
+ 396          
+ 397          void Mod_MipiTx_Digital_Config()
+ 398          {
+ 399   1          Drv_MipiTx_Rst(ENABLED);
+ 400   1          Drv_MipiTx_LaneSwap(); // if need adjust lane,please modify
+ 401   1          Drv_MipiTx_PortSwap(g_stMipiTx.ucTxPortNum);
+ 402   1          Drv_MipiTx_PortNumSet(g_stMipiTx.ucTxPortNum);
+ 403   1          Drv_MipiTx_LaneNumSet(g_stMipiTx.ucTxLaneNum);
+ 404   1          LTLog(LOG_INFO, "Port: %02bx, Lane: %02bx", g_stMipiTx.ucTxPortNum, g_stMipiTx.ucTxLaneNum);
+ 405   1      #if MIPITX_PHY_SEL == MIPITX_CPHY
+ 406   1          Drv_MipiTx_CPhyEn(ENABLED);
+ 407   1          LTLog(LOG_INFO, "select Mipi Cphy");
+ 408   1          // TODO: 这里没有clk 可以选择，数字和模拟都未提供，不影响Dphy以及非8lane Dphy
              - CSI
- 407   1          SET_BIT(BKA3_7B_REG, BIT2);
- 408   1      #else
+ 409   1          SET_BIT(BKA3_7B_REG, BIT2);
+ 410   1      #else
                   Drv_MipiTx_DPhyClkDataSet();
                   Drv_MipiTx_DPhyClkModeSet(g_stMipiTx.b1MipiClockburst);
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 8   
+
               #if MIPITX_PRO_SEL == MIPITX_DSI
                   Drv_MipiTx_DSIVideoModeSet(g_stMipiTx.b1DSIVideoMode);
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 8   
-
               #endif
                   CLEAR_BIT(BKA3_7B_REG, BIT2);
                   if (g_stMipiTx.b1DphyCsi8Lane)
@@ -459,26 +461,26 @@ line level    source
                   Drv_MipiTx_EotpSet(ENABLED);
               
               #endif
- 424   1          Drv_MipiTx_PhyModeSet(g_stMipiTx.ucTxPhySel);
- 425   1          Drv_MipiTx_LmtxModeSet(g_stMipiTx.ucTxPhySel);
- 426   1          Drv_MipiTx_LmtxSrcSet();
- 427   1          Drv_MipiTx_LmtxInputDataSet();
- 428   1          Drv_MipiTx_LmtxSramInputSet();
- 429   1          // TODO: 0xF97A bit 4 - MIPI protocol vactive select:HW or SW?
- 430   1      #if (MIPITX_PRO_SEL == MIPITX_CSI)
+ 426   1          Drv_MipiTx_PhyModeSet(g_stMipiTx.ucTxPhySel);
+ 427   1          Drv_MipiTx_LmtxModeSet(g_stMipiTx.ucTxPhySel);
+ 428   1          Drv_MipiTx_LmtxSrcSet();
+ 429   1          Drv_MipiTx_LmtxInputDataSet();
+ 430   1          Drv_MipiTx_LmtxSramInputSet();
+ 431   1          // TODO: 0xF97A bit 4 - MIPI protocol vactive select:HW or SW?
+ 432   1      #if (MIPITX_PRO_SEL == MIPITX_CSI)
                   // 开启 CSI frame number enable.
                   Drv_MipiTx_FrameCntSet(ON);
               #else
- 434   1          Drv_MipiTx_HssLP_En(MIPITX_HSS_BURST_EN);
- 435   1          Drv_MipiTx_FrameCntSet(OFF);
- 436   1      #endif
- 437   1      
- 438   1          Drv_MipiTx_3DModeSet(g_stMipiTx.uc3DMode);
+ 436   1          Drv_MipiTx_HssLP_En(MIPITX_HSS_BURST_EN);
+ 437   1          Drv_MipiTx_FrameCntSet(OFF);
+ 438   1      #endif
  439   1      
- 440   1          Mod_MipiTx_SetDataType(g_stMipiTx.ucTxFormat);
+ 440   1          Drv_MipiTx_3DModeSet(g_stMipiTx.uc3DMode);
  441   1      
- 442   1      #if RX_PORT_SIGN == DP_PORT
- 443   1      #if (DPRX_DSC_BYPASS_SUPPORT == ENABLED)
+ 442   1          Mod_MipiTx_SetDataType(g_stMipiTx.ucTxFormat);
+ 443   1      
+ 444   1      #if RX_PORT_SIGN == DP_PORT
+ 445   1      #if (DPRX_DSC_BYPASS_SUPPORT == ENABLED)
                   if (Drv_DpRxDscBy_SwitchGet() == ENABLED)
                   {
                       LTLog(LOG_INFO, "DSC soft wordcnt;");
@@ -487,31 +489,31 @@ line level    source
                       Drv_MipiTx_Dsc_Split(g_stMipiTxVideoTiming.Hactive, g_stMipiTx.ucTxPortNum);
                   }
               #endif
- 451   1      #endif
- 452   1      
- 453   1      #if MIPITX_DSC == ENABLED
- 454   1          LTLog(LOG_INFO, "DSC soft wordcnt;");
- 455   1          Drv_MipiTx_WordCnt_Set(SW_MODE, g_stMipiTxDscEncVideoTiming.Hactive / g_stMipiTx.ucTxPortNum, g_stMipi
+ 453   1      #endif
+ 454   1      
+ 455   1      #if MIPITX_DSC == ENABLED
+ 456   1          LTLog(LOG_INFO, "DSC soft wordcnt;");
+ 457   1          Drv_MipiTx_WordCnt_Set(SW_MODE, g_stMipiTxDscEncVideoTiming.Hactive / g_stMipiTx.ucTxPortNum, g_stMipi
              -Tx.ucTxPortNum);
- 456   1          Drv_MipiTx_Dsc_Split(g_stMipiTxVideoTiming.Hactive, g_stMipiTx.ucTxPortNum);
- 457   1      #endif
- 458   1      }
- 459          
- 460          void Mod_MipiTx_Anolog_Config()
- 461          {
- 462   1          Drv_MipiTx_PhySet(MP0_EN, MP1_EN, MP2_EN, MP3_EN);
- 463   1      }
- 464          
- 465          void Mod_MipiTx_HssSet()
- 466          {
- 467   1          u16 Hss = 0x0A;
- 468   1      #if (MIPITX_PRO_SEL == MIPITX_CSI)
+ 458   1          Drv_MipiTx_Dsc_Split(g_stMipiTxVideoTiming.Hactive, g_stMipiTx.ucTxPortNum);
+ 459   1      #endif
+ 460   1      }
+ 461          
+ 462          void Mod_MipiTx_Anolog_Config()
+ 463          {
+ 464   1          Drv_MipiTx_PhySet(MP0_EN, MP1_EN, MP2_EN, MP3_EN);
+ 465   1      }
+ 466          
+ 467          void Mod_MipiTx_HssSet()
+ 468          {
+ 469   1          u16 Hss = 0x0A;
+ 470   1      #if (MIPITX_PRO_SEL == MIPITX_CSI)
                   if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
                   {
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 9   
+
                       if (g_stMipiTx.b1MipiClockburst == ENABLED)
                       {
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 9   
-
                           Hss = (3 * Drv_mipiTx_GetHsRqstPre() + Drv_MipiTx_GetHsTrail() + 9) / 2 + 20;
                       }
                       else
@@ -520,140 +522,140 @@ line level    source
                       }
                   }
               #else
- 481   1          if (MIPITX_CPHY == g_stMipiTx.ucTxPhySel)
- 482   1          {
- 483   2              if (3 != g_stMipiTx.ucTxLaneNum)
- 484   2              {
- 485   3                  Hss = 0x20;
- 486   3              }
- 487   2          }
- 488   1      #if MIPITX_HSCMD_EN == ENABLED
+ 483   1          if (MIPITX_CPHY == g_stMipiTx.ucTxPhySel)
+ 484   1          {
+ 485   2              if (3 != g_stMipiTx.ucTxLaneNum)
+ 486   2              {
+ 487   3                  Hss = 0x20;
+ 488   3              }
+ 489   2          }
+ 490   1      #if MIPITX_HSCMD_EN == ENABLED
                   {
                       Hss = MIPITX_HSCMD_HSSLEN;
                   }
               #endif
- 493   1      #endif
- 494   1      
- 495   1          Drv_MipiTx_Hss_Set(Hss);
- 496   1      }
- 497          
- 498          void Mod_MipiTx_FifoRddly_Config()
- 499          {
- 500   1          u16 rdpixclk, rdbyteclk, rdhss, rgodhact;
- 501   1          u32 rddly, rddly_max, rddly_min1, rddly_min2;
- 502   1          u32 Temp;
- 503   1      
- 504   1          rdpixclk = (u16)(g_stMipiTx.ulMipiInClk / 1000);
- 505   1          rdbyteclk = (u16)(g_stMipiTx.ulMipiDataRate / 2000);
- 506   1          if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
- 507   1          {
- 508   2              rdbyteclk /= 8;
- 509   2          }
- 510   1          else
- 511   1          {
- 512   2              rdbyteclk /= 7;
- 513   2          }
- 514   1      
- 515   1          if ((ENABLED == g_stMipiTx.b1DphyCsi8Lane) || (MIPITX_CPHY == g_stMipiTx.ucTxPhySel))
- 516   1          {
- 517   2              rdbyteclk <<= 1;
- 518   2          }
- 519   1          rdbyteclk *= g_stMipiTx.ucTxPortNum;
- 520   1          rdhss = Drv_MipiTx_Hss_Get();
- 521   1          rgodhact = Drv_MipiTx_FSMHact_Get();
- 522   1      
- 523   1          LTLog(LOG_DEBUG, "rdbyteclk:%d, rdpixclk:%d ", rdbyteclk, rdpixclk);
- 524   1          LTLog(LOG_DEBUG, "hsw:%d, hbp:%d hactive:%d", g_stMipiTxVideoTiming.Hsw, g_stMipiTxVideoTiming.Hbp, g_
+ 495   1      #endif
+ 496   1      
+ 497   1          Drv_MipiTx_Hss_Set(Hss);
+ 498   1      }
+ 499          
+ 500          void Mod_MipiTx_FifoRddly_Config()
+ 501          {
+ 502   1          u16 rdpixclk, rdbyteclk, rdhss, rgodhact;
+ 503   1          u32 rddly, rddly_max, rddly_min1, rddly_min2;
+ 504   1          u32 Temp;
+ 505   1      
+ 506   1          rdpixclk = (u16)(g_stMipiTx.ulMipiInClk / 1000);
+ 507   1          rdbyteclk = (u16)(g_stMipiTx.ulMipiDataRate / 2000);
+ 508   1          if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
+ 509   1          {
+ 510   2              rdbyteclk /= 8;
+ 511   2          }
+ 512   1          else
+ 513   1          {
+ 514   2              rdbyteclk /= 7;
+ 515   2          }
+ 516   1      
+ 517   1          if ((ENABLED == g_stMipiTx.b1DphyCsi8Lane) || (MIPITX_CPHY == g_stMipiTx.ucTxPhySel))
+ 518   1          {
+ 519   2              rdbyteclk <<= 1;
+ 520   2          }
+ 521   1          rdbyteclk *= g_stMipiTx.ucTxPortNum;
+ 522   1          rdhss = Drv_MipiTx_Hss_Get();
+ 523   1          rgodhact = Drv_MipiTx_FSMHact_Get();
+ 524   1      
+ 525   1          LTLog(LOG_DEBUG, "rdbyteclk:%d, rdpixclk:%d ", rdbyteclk, rdpixclk);
+ 526   1          LTLog(LOG_DEBUG, "hsw:%d, hbp:%d hactive:%d", g_stMipiTxVideoTiming.Hsw, g_stMipiTxVideoTiming.Hbp, g_
              -stMipiTxVideoTiming.Hactive);
- 525   1      
- 526   1          Temp = (rdbyteclk * (g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2) / rdpixclk);
- 527   1          if (Temp > rdhss)
- 528   1          {
- 529   2              rddly_min1 = (rdbyteclk * (g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2) / rdpixc
+ 527   1      
+ 528   1          Temp = (rdbyteclk * (g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2) / rdpixclk);
+ 529   1          if (Temp > rdhss)
+ 530   1          {
+ 531   2              rddly_min1 = (rdbyteclk * (g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2) / rdpixc
              -lk) - rdhss;
- 530   2          }
- 531   1          else
- 532   1          {
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 10  
+ 532   2          }
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 10  
 
- 533   2              rddly_min1 = 0;
- 534   2          }
- 535   1      
- 536   1          if (1 == g_stMipiTx.ucTxPortNum)
- 537   1          {
- 538   2              rddly_min2 = (u32)rdbyteclk * (g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2 + g_s
+ 533   1          else
+ 534   1          {
+ 535   2              rddly_min1 = 0;
+ 536   2          }
+ 537   1      
+ 538   1          if (1 == g_stMipiTx.ucTxPortNum)
+ 539   1          {
+ 540   2              rddly_min2 = (u32)rdbyteclk * (g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2 + g_s
              -tMipiTxVideoTiming.Hactive / 2);
- 539   2              Temp = ((u32)rddly_min2 / (u32)rdpixclk);
- 540   2              if (Temp > (rdhss + rgodhact))
- 541   2              {
- 542   3                  rddly_min2 = (u32)(((u32)rddly_min2 / (u32)rdpixclk) - rdhss - rgodhact);
- 543   3              }
- 544   2              else
- 545   2              {
- 546   3                  rddly_min2 = 0;
- 547   3              }
- 548   2          }
- 549   1          else
- 550   1          {
- 551   2              rddly_min2 = rddly_min1;
- 552   2          }
- 553   1      
- 554   1          if (rddly_min1 > rddly_min2)
- 555   1          {
- 556   2              rddly_min2 = rddly_min1;
- 557   2          }
- 558   1      
- 559   1          LTLog(LOG_DEBUG, "ucBpp 0x%02bx;", g_stMipiTx.ucBpp);
+ 541   2              Temp = ((u32)rddly_min2 / (u32)rdpixclk);
+ 542   2              if (Temp > (rdhss + rgodhact))
+ 543   2              {
+ 544   3                  rddly_min2 = (u32)(((u32)rddly_min2 / (u32)rdpixclk) - rdhss - rgodhact);
+ 545   3              }
+ 546   2              else
+ 547   2              {
+ 548   3                  rddly_min2 = 0;
+ 549   3              }
+ 550   2          }
+ 551   1          else
+ 552   1          {
+ 553   2              rddly_min2 = rddly_min1;
+ 554   2          }
+ 555   1      
+ 556   1          if (rddly_min1 > rddly_min2)
+ 557   1          {
+ 558   2              rddly_min2 = rddly_min1;
+ 559   2          }
  560   1      
- 561   1          rddly_max = 0x8000 / (g_stMipiTx.ucBpp << 1);
- 562   1          rddly_max = rdbyteclk * (rddly_max + g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2);
- 563   1          rddly_max = rddly_max / (u32)rdpixclk - rdhss;
- 564   1          // rddly = (rddly_max - rddly_min2) / 20 + rddly_min2;
- 565   1          rddly = (rddly_max / 7) + rddly_min2;
- 566   1      
- 567   1          if (2 == g_stMipiTx.ucTxPortNum && g_stMipiTxVideoTiming.Hbp > 1000) // 720P 25Hz hbp=2268 以上公�
+ 561   1          LTLog(LOG_DEBUG, "ucBpp 0x%02bx;", g_stMipiTx.ucBpp);
+ 562   1      
+ 563   1          rddly_max = 0x8000 / (g_stMipiTx.ucBpp << 1);
+ 564   1          rddly_max = rdbyteclk * (rddly_max + g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2);
+ 565   1          rddly_max = rddly_max / (u32)rdpixclk - rdhss;
+ 566   1          // rddly = (rddly_max - rddly_min2) / 20 + rddly_min2;
+ 567   1          rddly = (rddly_max / 7) + rddly_min2;
+ 568   1      
+ 569   1          if (2 == g_stMipiTx.ucTxPortNum && g_stMipiTxVideoTiming.Hbp > 1000) // 720P 25Hz hbp=2268 以上公�
              -�不可用
- 568   1          {
- 569   2              rddly = rddly_max / 7 + rddly_min2 / 2;
- 570   2          }
- 571   1      
- 572   1          LTLog(LOG_INFO, "read delay:%lu", rddly);
+ 570   1          {
+ 571   2              rddly = rddly_max / 7 + rddly_min2 / 2;
+ 572   2          }
  573   1      
- 574   1          Drv_MipiTx_FifoDelay_Set(rddly);
- 575   1      }
- 576          
- 577          void Mod_MipiTx_ByteClk_Chk(void)
- 578          {
- 579   1          u32 TempClock = 0;
- 580   1      
- 581   1          Drv_System_FmSet(TOP_FM, 0x31);
- 582   1          Ocm_Delay1ms(5);
- 583   1          TempClock = Drv_System_FmGet(TOP_FM, 0);
- 584   1          LTLog(LOG_INFO, "Ad_lmtx_write_clk = %lukhz", TempClock);
- 585   1      
- 586   1          Drv_System_FmSet(TOP_FM, 0x30);
- 587   1          Ocm_Delay1ms(5);
- 588   1          TempClock = Drv_System_FmGet(TOP_FM, 0);
- 589   1          LTLog(LOG_INFO, "Ad_lmtx_read_clk = %lukhz", TempClock);
- 590   1      }
- 591          
- 592          void Mod_MipiTx_StateHandler()
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 11  
+ 574   1          LTLog(LOG_INFO, "read delay:%lu", rddly);
+ 575   1      
+ 576   1          Drv_MipiTx_FifoDelay_Set(rddly);
+ 577   1      }
+ 578          
+ 579          void Mod_MipiTx_ByteClk_Chk(void)
+ 580          {
+ 581   1          u32 TempClock = 0;
+ 582   1      
+ 583   1          Drv_System_FmSet(TOP_FM, 0x31);
+ 584   1          Ocm_Delay1ms(5);
+ 585   1          TempClock = Drv_System_FmGet(TOP_FM, 0);
+ 586   1          LTLog(LOG_INFO, "Ad_lmtx_write_clk = %lukhz", TempClock);
+ 587   1      
+ 588   1          Drv_System_FmSet(TOP_FM, 0x30);
+ 589   1          Ocm_Delay1ms(5);
+ 590   1          TempClock = Drv_System_FmGet(TOP_FM, 0);
+ 591   1          LTLog(LOG_INFO, "Ad_lmtx_read_clk = %lukhz", TempClock);
+ 592   1      }
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 11  
 
- 593          {
- 594   1          switch (g_stMipiTx.ucTxState)
- 595   1          {
- 596   2          case STATE_MIPITX_POWER_ON_1:
- 597   2              Mod_MipiTx_SetState(STATE_MIPITX_UPSTREAM_DEVICE_READY_2);
- 598   2              break;
- 599   2      
- 600   2          case STATE_MIPITX_UPSTREAM_DEVICE_READY_2:
- 601   2              if (g_stMipiTx.ucTxStateChangeFlag)
- 602   2              {
- 603   3                  g_stMipiTx.ucTxStateChangeFlag = FALSE;
- 604   3                  Drv_MipiTx_VideoSet(OFF);
- 605   3                  Drv_GPIO19Vsync_Set(DISABLED);
- 606   3      #if ((CHIP_SEL == LT6911GXD_HD) || (CHIP_SEL == LT7911UXE_HD))
+ 593          
+ 594          void Mod_MipiTx_StateHandler()
+ 595          {
+ 596   1          switch (g_stMipiTx.ucTxState)
+ 597   1          {
+ 598   2          case STATE_MIPITX_POWER_ON_1:
+ 599   2              Mod_MipiTx_SetState(STATE_MIPITX_UPSTREAM_DEVICE_READY_2);
+ 600   2              break;
+ 601   2      
+ 602   2          case STATE_MIPITX_UPSTREAM_DEVICE_READY_2:
+ 603   2              if (g_stMipiTx.ucTxStateChangeFlag)
+ 604   2              {
+ 605   3                  g_stMipiTx.ucTxStateChangeFlag = FALSE;
+ 606   3                  Drv_MipiTx_VideoSet(OFF);
+ 607   3                  Drv_GPIO19Vsync_Set(DISABLED);
+ 608   3      #if ((CHIP_SEL == LT6911GXD_HD) || (CHIP_SEL == LT7911UXE_HD))
                           g_stHdmiRx.b1DownstreamDeviceReady = TRUE;
               #if EDID_FLASH == ENABLED
                           {
@@ -663,146 +665,146 @@ line level    source
                           memcpy(szEdidData, szMipiEdid, 512);
               #endif
               #endif
- 616   3      
- 617   3      #if ((CHIP_SEL == LT7911UXE_DP) || (CHIP_SEL == LT6911GXD_DP))
- 618   3                  g_stDpRx.b1DownstreamDeviceReady = TRUE;
- 619   3      #if EDID_FLASH == ENABLED
+ 618   3      
+ 619   3      #if ((CHIP_SEL == LT7911UXE_DP) || (CHIP_SEL == LT6911GXD_DP))
+ 620   3                  g_stDpRx.b1DownstreamDeviceReady = TRUE;
+ 621   3      #if EDID_FLASH == ENABLED
                           {
                               Custom_EDID_LoadFromFlash();
                           }
               #else
- 624   3      #if CUSTOM_EDID_SWITCH == ENABLED
+ 626   3      #if CUSTOM_EDID_SWITCH == ENABLED
               
               #else
- 627   3                  memcpy(szEdidData, szMipiEdid, 512);
- 628   3      #endif
- 629   3      #endif
+ 629   3                  memcpy(szEdidData, szMipiEdid, 512);
  630   3      #endif
- 631   3              }
- 632   2      
- 633   2              if (g_stMipiTx.b1UpstreamDeviceReady)
- 634   2              {
- 635   3                  Mod_MipiTx_SetState(STATE_MIPITX_UPSTREAM_VIDEO_READY_3);
- 636   3              }
- 637   2              break;
- 638   2          case STATE_MIPITX_UPSTREAM_VIDEO_READY_3:
- 639   2              if (g_stMipiTx.ucTxStateChangeFlag)
- 640   2              {
- 641   3                  g_stMipiTx.ucTxStateChangeFlag = FALSE;
- 642   3                  Drv_MipiTx_VideoSet(OFF);
- 643   3                  Drv_GPIO19Vsync_Set(DISABLED);
- 644   3              }
- 645   2      
- 646   2              if (g_stMipiTx.b1UpstreamVideoReady)
- 647   2              {
- 648   3                  Mod_MipiTx_SetState(STATE_MIPITX_CONFIG_VIDEO_AUDIO_4);
- 649   3      #if MIPITX_DSC == ENABLED
- 650   3                  Drv_Sys_EncPowerDomain(FALSE);
- 651   3                  // Drv_Gpio_ModeSet(GPIO6_D2, OUT_PP_2x | NO_PU_PD, VOL_3_3);//led 适配飞线
- 652   3                  Mod_MipiTxDscEnc_Config();
- 653   3                  Ocm_Delay1ms(20);
- 654   3      #endif
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 12  
+ 631   3      #endif
+ 632   3      #endif
+ 633   3              }
+ 634   2      
+ 635   2              if (g_stMipiTx.b1UpstreamDeviceReady)
+ 636   2              {
+ 637   3                  Mod_MipiTx_SetState(STATE_MIPITX_UPSTREAM_VIDEO_READY_3);
+ 638   3              }
+ 639   2              break;
+ 640   2          case STATE_MIPITX_UPSTREAM_VIDEO_READY_3:
+ 641   2              if (g_stMipiTx.ucTxStateChangeFlag)
+ 642   2              {
+ 643   3                  g_stMipiTx.ucTxStateChangeFlag = FALSE;
+ 644   3                  Drv_MipiTx_VideoSet(OFF);
+ 645   3                  Drv_GPIO19Vsync_Set(DISABLED);
+ 646   3              }
+ 647   2      
+ 648   2              if (g_stMipiTx.b1UpstreamVideoReady)
+ 649   2              {
+ 650   3                  Mod_MipiTx_SetState(STATE_MIPITX_CONFIG_VIDEO_AUDIO_4);
+ 651   3      #if MIPITX_DSC == ENABLED
+ 652   3                  Drv_Sys_EncPowerDomain(FALSE);
+ 653   3                  // Drv_Gpio_ModeSet(GPIO6_D2, OUT_PP_2x | NO_PU_PD, VOL_3_3);//led 适配飞线
+ 654   3                  Mod_MipiTxDscEnc_Config();
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 12  
 
- 655   3      
- 656   3                  Drv_Sys_DHTxPowerDomain(FALSE);
- 657   3              }
- 658   2              break;
- 659   2      
- 660   2          case STATE_MIPITX_CONFIG_VIDEO_AUDIO_4:
- 661   2              Mod_MipiTx_CfgParaInit();
- 662   2              Mod_MipiTx_DataRateAdj();
- 663   2              Mod_MipiTx_PllSet();
- 664   2      
- 665   2              if (!Mod_MipiTx_PllCaliIfSucc())
- 666   2              {
- 667   3                  return;
- 668   3              }
- 669   2              Mod_MipiTx_Resolution_Config();
- 670   2              Mod_MipiTx_PhyTimingSet();
- 671   2              Mod_MipiTx_Digital_Config(); // TODO:
- 672   2              Mod_MipiTx_Anolog_Config();  // TODO:
- 673   2      
- 674   2              Mod_MipiTx_HssSet();
- 675   2              Mod_MipiTx_FifoRddly_Config();
- 676   2              Mod_MipiTx_ByteClk_Chk();
- 677   2      
- 678   2              Mod_MipiTx_SetState(STATE_MIPITX_VIDEO_OUT_5);
- 679   2              break;
- 680   2          case STATE_MIPITX_VIDEO_OUT_5:
- 681   2              if (g_stMipiTx.b1MIPITXStreamOn == ON)
- 682   2              {
- 683   3                  Drv_MipiTx_Rst(ENABLED);
- 684   3      #if (MIPITX_PRO_SEL == MIPITX_DSI)
- 685   3                  // 25090302: GPIO Control
- 686   3                  Drv_Gpio_ModeSet(GPIO12_D1_VDET, OUT_PP_2x | NO_PU_PD, VOL_1_8);
- 687   3                  Drv_IOSoftLevel_Set(GPIO12_D1_VDET, HIGH); // GPIO12 1.8V供电
- 688   3                  Ocm_Delay1ms(50);
- 689   3      
- 690   3                  Drv_Gpio_ModeSet(GPIO0_EARCN, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 691   3                  Drv_IOSoftLevel_Set(GPIO0_EARCN, HIGH); // GPIO0 正负电压
- 692   3                  Ocm_Delay1ms(50);
- 693   3      
- 694   3                  Drv_Gpio_ModeSet(GPIO15_D2_VDET, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 695   3                  Drv_IOSoftLevel_Set(GPIO15_D2_VDET, HIGH); // GPIO15 复位
- 696   3                  Ocm_Delay1ms(5);
- 697   3                  Drv_Gpio_ModeSet(GPIO1_EARCP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 698   3                  Drv_IOSoftLevel_Set(GPIO1_EARCP, HIGH); // GPIO1 复位
- 699   3                  Ocm_Delay1ms(200);
- 700   3      
- 701   3                  Mod_DCS_Init(); // 下发屏参指令
- 702   3                  Ocm_Delay1ms(200);
- 703   3      
- 704   3                  Drv_Gpio_ModeSet(GPIO3_DHRX_DCAUXP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 705   3                  Drv_IOSoftLevel_Set(GPIO3_DHRX_DCAUXP, HIGH); // GPIO3 背光
- 706   3                  Ocm_Delay1ms(50);
- 707   3      
- 708   3                  Drv_Gpio_ModeSet(GPIO24_PWM2, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 709   3                  Drv_IOSoftLevel_Set(GPIO24_PWM2, HIGH); // GPIO24 PWM
- 710   3                  Ocm_Delay1ms(50);
- 711   3      
- 712   3      #endif
+ 655   3                  Ocm_Delay1ms(20);
+ 656   3      #endif
+ 657   3      
+ 658   3                  Drv_Sys_DHTxPowerDomain(FALSE);
+ 659   3              }
+ 660   2              break;
+ 661   2      
+ 662   2          case STATE_MIPITX_CONFIG_VIDEO_AUDIO_4:
+ 663   2              Mod_MipiTx_CfgParaInit();
+ 664   2              Mod_MipiTx_DataRateAdj();
+ 665   2              Mod_MipiTx_PllSet();
+ 666   2      
+ 667   2              if (!Mod_MipiTx_PllCaliIfSucc())
+ 668   2              {
+ 669   3                  return;
+ 670   3              }
+ 671   2              Mod_MipiTx_Resolution_Config();
+ 672   2              Mod_MipiTx_PhyTimingSet();
+ 673   2              Mod_MipiTx_Digital_Config(); // TODO:
+ 674   2              Mod_MipiTx_Anolog_Config();  // TODO:
+ 675   2      
+ 676   2              Mod_MipiTx_HssSet();
+ 677   2              Mod_MipiTx_FifoRddly_Config();
+ 678   2              Mod_MipiTx_ByteClk_Chk();
+ 679   2      
+ 680   2              Mod_MipiTx_SetState(STATE_MIPITX_VIDEO_OUT_5);
+ 681   2              break;
+ 682   2          case STATE_MIPITX_VIDEO_OUT_5:
+ 683   2              if (g_stMipiTx.b1MIPITXStreamOn == ON)
+ 684   2              {
+ 685   3                  Drv_MipiTx_Rst(ENABLED);
+ 686   3      #if (MIPITX_PRO_SEL == MIPITX_DSI)
+ 687   3                  // 25090302: GPIO Control
+ 688   3                  Drv_Gpio_ModeSet(GPIO12_D1_VDET, OUT_PP_2x | NO_PU_PD, VOL_1_8);
+ 689   3                  Drv_IOSoftLevel_Set(GPIO12_D1_VDET, HIGH); // GPIO12 1.8V供电
+ 690   3                  Ocm_Delay1ms(50);
+ 691   3      
+ 692   3                  Drv_Gpio_ModeSet(GPIO0_EARCN, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 693   3                  Drv_IOSoftLevel_Set(GPIO0_EARCN, HIGH); // GPIO0 正负电压
+ 694   3                  Ocm_Delay1ms(50);
+ 695   3      
+ 696   3                  Drv_Gpio_ModeSet(GPIO15_D2_VDET, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 697   3                  Drv_IOSoftLevel_Set(GPIO15_D2_VDET, HIGH); // GPIO15 复位
+ 698   3                  Ocm_Delay1ms(5);
+ 699   3                  Drv_Gpio_ModeSet(GPIO1_EARCP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 700   3                  Drv_IOSoftLevel_Set(GPIO1_EARCP, HIGH); // GPIO1 复位
+ 701   3                  Ocm_Delay1ms(200);
+ 702   3      
+ 703   3                  Mod_DCS_Init(); // 下发屏参指令
+ 704   3                  Ocm_Delay1ms(200);
+ 705   3      
+ 706   3                  Drv_Gpio_ModeSet(GPIO3_DHRX_DCAUXP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 707   3                  Drv_IOSoftLevel_Set(GPIO3_DHRX_DCAUXP, HIGH); // GPIO3 背光
+ 708   3                  Ocm_Delay1ms(50);
+ 709   3      
+ 710   3                  Drv_Gpio_ModeSet(GPIO24_PWM2, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 711   3                  Drv_IOSoftLevel_Set(GPIO24_PWM2, HIGH); // GPIO24 PWM
+ 712   3                  Ocm_Delay1ms(50);
  713   3      
- 714   3                  if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
- 715   3                  {
- 716   4                      Drv_MipiTx_DPhyClkHsTrig();
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 13  
+ 714   3      #endif
+ 715   3      
+ 716   3                  if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 13  
 
- 717   4                      Drv_MipiTx_DPhySkewCali();
- 718   4                  }
- 719   3      
- 720   3                  Drv_MipiTx_VideoSet(ON);
- 721   3                  Mod_MipiTx_SetState(STATE_MIPITX_AUDIO_OUT_6);
- 722   3              }
- 723   2              break;
- 724   2          case STATE_MIPITX_AUDIO_OUT_6:
- 725   2              Drv_Audio_Init();
- 726   2      #if TDM_SUPPORT == ENABLED
+ 717   3                  {
+ 718   4                      Drv_MipiTx_DPhyClkHsTrig();
+ 719   4                      Drv_MipiTx_DPhySkewCali();
+ 720   4                  }
+ 721   3      
+ 722   3                  Drv_MipiTx_VideoSet(ON);
+ 723   3                  Mod_MipiTx_SetState(STATE_MIPITX_AUDIO_OUT_6);
+ 724   3              }
+ 725   2              break;
+ 726   2          case STATE_MIPITX_AUDIO_OUT_6:
+ 727   2              Drv_Audio_Init();
+ 728   2      #if TDM_SUPPORT == ENABLED
                       Drv_Audio_TdmOutInit();
               #endif
- 729   2              Mod_MipiTx_SetState(STATE_MIPITX_PLAY_BACK_7);
- 730   2              break;
- 731   2          case STATE_MIPITX_PLAY_BACK_7:
+ 731   2              Mod_MipiTx_SetState(STATE_MIPITX_PLAY_BACK_7);
  732   2              break;
- 733   2          default:
+ 733   2          case STATE_MIPITX_PLAY_BACK_7:
  734   2              break;
- 735   2          }
- 736   1      }
- 737          
- 738          void Mod_MipiTx_Handler(void)
- 739          {
- 740   1          Mod_MipiTx_StateHandler();
- 741   1          Mod_MipiTx_EventProc();
- 742   1      }
- 743          
- 744          void Mod_MIPITx_Pattern(void)
- 745          {
- 746   1      #if MIPITX_VID_PATTERN_MODE != NO_PATTERN
- 747   1          ModPattern_Init();
- 748   1          g_stMipiTx.b1UpstreamVideoReady = TRUE;
- 749   1          g_stMipiTx.b1UpstreamDeviceReady = TRUE;
- 750   1      
- 751   1      #if CSC_SUPPORT == ENABLED
+ 735   2          default:
+ 736   2              break;
+ 737   2          }
+ 738   1      }
+ 739          
+ 740          void Mod_MipiTx_Handler(void)
+ 741          {
+ 742   1          Mod_MipiTx_StateHandler();
+ 743   1          Mod_MipiTx_EventProc();
+ 744   1      }
+ 745          
+ 746          void Mod_MIPITx_Pattern(void)
+ 747          {
+ 748   1      #if MIPITX_VID_PATTERN_MODE != NO_PATTERN
+ 749   1          ModPattern_Init();
+ 750   1          g_stMipiTx.b1UpstreamVideoReady = TRUE;
+ 751   1          g_stMipiTx.b1UpstreamDeviceReady = TRUE;
+ 752   1      
+ 753   1      #if CSC_SUPPORT == ENABLED
               
               #if ((CHIP_SEL == LT6911GXD_HD) || (CHIP_SEL == LT7911UXE_HD))
                   LT6911GXE_HdmiRxCscOrEncSel();
@@ -815,23 +817,23 @@ line level    source
               #endif
               
               #endif
- 764   1          while (1)
- 765   1          {
- 766   2              Mod_MipiTx_Handler();
- 767   2          }
- 768   1      #endif
- 769   1      }
- 770          
- 771          #endif
+ 766   1          while (1)
+ 767   1          {
+ 768   2              Mod_MipiTx_Handler();
+ 769   2          }
+ 770   1      #endif
+ 771   1      }
+ 772          
+ 773          #endif
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   3115    ----
+   CODE SIZE        =   3142    ----
    CONSTANT SIZE    =    999    ----
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 14  
+
    XDATA SIZE       =    609      53
    PDATA SIZE       =   ----    ----
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:03:13 PAGE 14  
-
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----

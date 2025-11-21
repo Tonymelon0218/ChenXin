@@ -62,7 +62,7 @@ void Mod_DCS_Init(void)
     Drv_MipiTx_DcsPktWrite(Display_On[0], (sizeof(Display_On) - 1), &Display_On[1]);
     Ocm_Delay1ms(150);
     Drv_MipiTx_DcsPktWrite(Sleep_Out[0], (sizeof(Sleep_Out) - 1), &Sleep_Out[1]);
-    Ocm_Delay1ms(150);
+    Ocm_Delay1ms(200);
 
     Drv_MipiTx_Dsidcs_End();
     LTLog(LOG_INFO, "Mipi DCS END");

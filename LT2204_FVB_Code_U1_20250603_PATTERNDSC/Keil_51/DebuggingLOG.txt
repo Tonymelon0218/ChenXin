@@ -1,1 +1,5 @@
-25/11/21_01: 按照D-PHY去配置GPIO, 调整MIPI PHY定义, 调整DCS和PPS还有Timing
+25/11/21_01: 
+    调整: 按照D-PHY去配置GPIO, 调整MIPI PHY定义, 调整DCS和PPS还有Timing
+    结果: 花屏
+25/11/21_02:
+    调整: Timing的H方向参数调整为3的倍数; 增加80M MIPI速率

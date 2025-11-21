@@ -1278,14 +1278,14 @@ void Custom_Handler(void)
 #endif
 
 struct TIMING l_CustomTimingStr =
-// 2160x2160@90Hz
+// 2160x2160@120Hz
 {
-    615000  // PixelClock/1000
-,   2224    // Htotal
+    620420  // PixelClock/1000
+,   2244    // Htotal
 ,   2160    // Hactive
-,   40     // Hfp
+,   42     // Hfp
 ,   30      // Hsw
-,   10      // Hbp
+,   12      // Hbp
 ,   2304    // Vtotal
 ,   2160    // Vactive
 ,   124     // Vfp
@@ -1375,7 +1375,7 @@ HalfPixclk/A32B/0X80 /A32B/0X90 /A32B/0XA0  /A32B/0XB0  /A32B/0XC0  /A32B/0XD0  
     halfPixelClock = 297M   : Value_0xA32A = 95(0x5F) , Value_0xA32B = 0xA0
     halfPixelClock = 594M   : Value_0xA32A = 95(0x5F) , Value_0xA32B = 0x90
     */
-    Value_0xA32A = 49;
+    Value_0xA32A = 50;
     Value_0xA32B = 0x90;
 
     Drv_PtnTiming_Set(&l_CustomTimingStr);

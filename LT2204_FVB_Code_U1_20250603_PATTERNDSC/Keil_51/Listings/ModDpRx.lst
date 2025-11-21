@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 1   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODDPRX
 OBJECT MODULE PLACED IN .\Objects\ModDpRx.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L1_Module\ModDpRx.c LARGE OBJECTADVANCED OPTIMIZ
-                    -E(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_01.ORC) BROWSE INCDIR(..\User\
+                    -E(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02.ORC) BROWSE INCDIR(..\User\
                     -L0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\ModDpRx.lst) OBJECT(.\Objects\ModDpRx.o
                     -bj)
 
@@ -62,7 +62,7 @@ line level    source
   50   1      #if CHIP_SEL == LT8711GXE
                   LT8711GXE_DpRxVarInit();
               #endif
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 2   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 2   
 
   53   1      #if ((CHIP_SEL == LT7911UXE_DP) || (CHIP_SEL == LT6911GXD_DP))
   54   1          LT7911GXE_DpRxVarInit();
@@ -126,7 +126,7 @@ line level    source
                           {
                               Drv_DpRx_TypecRxChlSwap(TYPEC_FEMALE_FLIP, UCCStatus);
                           }
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 3   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 3   
 
                       }
                       UCCStatus.b2AttentionType = ATTENTION_HIGH;
@@ -190,7 +190,7 @@ line level    source
  174   1          {
  175   2              ;
  176   2          }
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 4   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 4   
 
  177   1      }
  178          
@@ -254,7 +254,7 @@ line level    source
                   }
                   else if (g_stDpRx.b2IsTimingHBE == HBE_TYPE_UHD_50Hz)
                   {
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 5   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 5   
 
                       memcpy(&BKF3_06_REG, &usTiming594M_H_Type2[0], 8);
                   }
@@ -318,7 +318,7 @@ line level    source
  294          void Mod_DpRx_ColorimetryUpdata(void)
  295          {
  296   1          ColorInfo_S stColorInfo;
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 6   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 6   
 
  297   1          Drv_DpRx_VidColorInfoGet(&stColorInfo);
  298   1          // no need updata.
@@ -382,7 +382,7 @@ line level    source
              -lk);
  355   1      }
  356          
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 7   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 7   
 
  357          void Mod_DpRx_FrameRate_Get(LtTiming_S *pstRxTimingInfo)
  358          {
@@ -446,7 +446,7 @@ line level    source
  412   1          //    Ocm_Delay1ms(10);
  413   1          g_stDpRx.ucHdcpVersion = NO_HDCP;
  414   1          Mod_DpRx_MsgNotify(DPRX_HDCP_VER_CHG_EVENT);
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 8   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 8   
 
  415   1          Mod_DpRx_MsgNotify(DPRX_VIDEO_OFF_EVENT);
  416   1      }
@@ -510,7 +510,7 @@ line level    source
  474          //========================================================================
  475          // Func Name   : Mod_DpRx_SourceDetProc
  476          // Description : The process of source detection.
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 9   
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 9   
 
  477          // Input       : void
  478          // Output      : None
@@ -574,7 +574,7 @@ line level    source
  536   2              else
  537   2              {
  538   3                  Drv_DpcdError_Clear(0x0f);
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 10  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 10  
 
  539   3              }
  540   2          }
@@ -638,7 +638,7 @@ line level    source
               #endif
                           return 0x01; // DSC Judge Done
                       }
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 11  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 11  
 
               
                       if ((ulFrequency > Mod_HdmiTx_LinkBandWidthGet()) && (g_stHdmiEdidInfo.ucMaxFrlDscRate != FRL_NOT_
@@ -702,7 +702,7 @@ line level    source
                       if ((Drv_Hdcp13_IntGet() == TRUE) || (Drv_Hdcp2X_IntGet() == TRUE))
                       {
                           printLT(PRINT_PRIO_HIG, "\nHDCP INT");
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 12  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 12  
 
                           Mod_DpRx_HpdIrq();
                       }
@@ -766,7 +766,7 @@ line level    source
  719   2          }
  720   1      #if ((DPRX_LINK_CTS == ENABLED) && (DPRX_DSC_DEC_SUPPORT == ENABLED))
                   if (g_stDpRx.ucRxState > STATE_DPRX_PPS_CHECK_12)
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 13  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 13  
 
                   {
                       // slove StemDeck PPS issue,just send PPS packet for a while
@@ -830,7 +830,7 @@ line level    source
  781   3                  printLT(PRINT_PRIO_TEST, "\nACDR Unlock");
  782   3                  ucMinState = MIN(ucMinState, STATE_DPRX_DESKEW_CHECK_9);
  783   3              }
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 14  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 14  
 
  784   2      #endif
  785   2      #if DPRX_DSC_DEC_SUPPORT == ENABLED
@@ -894,7 +894,7 @@ line level    source
  842   2          }
  843   1      }
  844          
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 15  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 15  
 
  845          void Mod_DpRx_StateHandler(void)
  846          {
@@ -958,7 +958,7 @@ line level    source
  904   3      #if ((DPRX_DSC_DEC_SUPPORT == ENABLED) || (DPRX_DSC_BYPASS_SUPPORT == ENABLED))
                           // to clear DSC abnormal handle logic
                           g_stDpRx.b1DscAbnormal = FALSE;
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 16  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 16  
 
               #endif
  908   3                  Mod_DpRx_SourceChannelSet();
@@ -1022,7 +1022,7 @@ line level    source
                           {
                               Ocm_Timer_UpdLocalTime(&ulCurrentTime);
                               g_stMstRxStatus.request_flag = 0;
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 17  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 17  
 
                               g_stMstRxStatus.payload_done_flag = 0;
                           }
@@ -1086,7 +1086,7 @@ line level    source
 1021   2              if (g_stDpRx.b1RxStateChanged == TRUE)
 1022   2              {
 1023   3      #if ((DPRX_FEC_SUPPORT == ENABLED) || (DPRX_DSC_DEC_SUPPORT == ENABLED) || (DPRX_DSC_BYPASS_SUPPORT == ENA
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 18  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 18  
 
              -BLED))
                           Drv_DpRx_FecSoftModeSet(FALSE); // hardmode
@@ -1150,7 +1150,7 @@ line level    source
                               Drv_DpRxDscDec_RxInit();
                               Drv_DpRxDscDec_ParaInit();
               #endif
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 19  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 19  
 
 1085   4      #if DPRX_DSC_BYPASS_SUPPORT == ENABLED
                               //                    Drv_DpRxDscBy_RxInit();
@@ -1214,7 +1214,7 @@ line level    source
                           }
               
                           // Mod_DpRx_SetState(STATE_DPRX_DEPACKET_CHECK_10);
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 20  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 20  
 
                       }
                       if (Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_1500) == TRUE)
@@ -1278,7 +1278,7 @@ line level    source
                           if (Drv_DpRxDscBy_SwitchGet() == ENABLED)
                           {
                               if (Drv_DpRx_DscDecState() == ENABLED)
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 21  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 21  
 
                               {
                                   Drv_DpRx_SyncPolSet(ENABLED);
@@ -1342,7 +1342,7 @@ line level    source
 1265   3                  Ocm_Timer_UpdLocalTime(&ulCurrentTime);
 1266   3              }
 1267   2              break;
-C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:03:13 PAGE 22  
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/21/2025 11:27:22 PAGE 22  
 
 1268   2      
 1269   2          case STATE_DPRX_HDCP_VER_CHK_14:
