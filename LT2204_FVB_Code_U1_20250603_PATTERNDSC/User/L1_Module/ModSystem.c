@@ -1278,59 +1278,31 @@ void Custom_Handler(void)
 #endif
 
 struct TIMING l_CustomTimingStr =
-//{ 74250//PixelClock/1000
-//, 1650//Htotal
-//, 1280//Hactive
-//, 110//Hfp
-//, 40//Hsw
-//, 220//Hbp
-//, 750//Vtotal
-//, 720//Vactive
-//, 5//Vfp
-//, 5//Vsw
-//, 20//Vbp
-//, 1//Hspol
-//, 1//Vspol
-//};
-
-//{ 162000//PixelClock/1000
-//, 2160//Htotal
-//, 1600//Hactive
-//, 64//Hfp
-//, 192//Hsw
-//, 304//Hbp
-//, 1250//Vtotal
-//, 1200//Vactive
-//, 1//Vfp
-//, 3//Vsw
-//, 46//Vbp
-//, 1//Hspol
-//, 1//Vspol
-//};
-
-// { 148500//PixelClock/1000
-// , 2200//Htotal
-// , 1920//Hactive
-// , 88//Hfp
-// , 44//Hsw
-// , 148//Hbp
-// , 1125//Vtotal
-// , 1080//Vactive
-// , 4//Vfp
-// , 5//Vsw
-// , 36//Vbp
-// , 1//Hspol
-// , 1//Vspol
-// };
-
 // 2160x2160@90Hz
+{
+    615000  // PixelClock/1000
+,   2224    // Htotal
+,   2160    // Hactive
+,   40     // Hfp
+,   30      // Hsw
+,   10      // Hbp
+,   2304    // Vtotal
+,   2160    // Vactive
+,   124     // Vfp
+,   10      // Vsw
+,   10      // Vbp
+,   1       // Hspol
+,   1       // Vspol
+};
+
+// 4320x2160@90Hz
 // {
-//     475800  // PixelClock/1000
-// ,   2376    // Htotal
-// ,   2160    // Hactive
+//     908000  // PixelClock/1000
+// ,   4536    // Htotal
+// ,   4320    // Hactive
 // ,   108     // Hfp
 // ,   42      // Hsw
-// ,   66     // Hbp
+// ,   66      // Hbp
 // ,   2225    // Vtotal
 // ,   2160    // Vactive
 // ,   57      // Vfp
@@ -1339,23 +1311,6 @@ struct TIMING l_CustomTimingStr =
 // ,   1       // Hspol
 // ,   1       // Vspol
 // };
-
-// 4320x2160@90Hz
-{
-    908000  // PixelClock/1000
-,   4536    // Htotal
-,   4320    // Hactive
-,   108     // Hfp
-,   42      // Hsw
-,   66      // Hbp
-,   2225    // Vtotal
-,   2160    // Vactive
-,   57      // Vfp
-,   4       // Vsw
-,   4       // Vbp
-,   1       // Hspol
-,   1       // Vspol
-};
 
 #if ((LVDXTX_VID_PATTERN_MODE != NO_PATTERN) || (MIPITX_VID_PATTERN_MODE != NO_PATTERN))
 void ModPattern_Init(void)
@@ -1420,8 +1375,8 @@ HalfPixclk/A32B/0X80 /A32B/0X90 /A32B/0XA0  /A32B/0XB0  /A32B/0XC0  /A32B/0XD0  
     halfPixelClock = 297M   : Value_0xA32A = 95(0x5F) , Value_0xA32B = 0xA0
     halfPixelClock = 594M   : Value_0xA32A = 95(0x5F) , Value_0xA32B = 0x90
     */
-    Value_0xA32A = 73;      // 72
-    Value_0xA32B = 0x90;    // A0
+    Value_0xA32A = 49;
+    Value_0xA32B = 0x90;
 
     Drv_PtnTiming_Set(&l_CustomTimingStr);
     Drv_PtnClk_Set(Value_0xA32A, Value_0xA32B); // Set the Half pixel clock

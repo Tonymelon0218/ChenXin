@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  FWVERSION                                                            11/11/2025 13:52:37 PAGE     1
+A51 MACRO ASSEMBLER  FWVERSION                                                            11/21/2025 11:03:14 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
                       55     
                       56     
                       57     
-A51 MACRO ASSEMBLER  FWVERSION                                                            11/11/2025 13:52:37 PAGE     2
+A51 MACRO ASSEMBLER  FWVERSION                                                            11/21/2025 11:03:14 PAGE     2
 
                       58     
                       59     
@@ -90,8 +90,8 @@ LOC  OBJ            LINE     SOURCE
 1000 25               78     CFG_BYTE_00:   DB  0x25          
                       79             
 1001 11               80     CFG_BYTE_01:   DB  0x11          
-1002 11               81     CFG_BYTE_02:   DB  0x11          
-1003 03               82     CFG_BYTE_03:   DB  0x03          
+1002 21               81     CFG_BYTE_02:   DB  0x21          
+1003 01               82     CFG_BYTE_03:   DB  0x01          
                       83     
 1004 FF               84     CFG_BYTE_04:   DB  0xff          
 1005 FF               85     CFG_BYTE_05:   DB  0xff          
@@ -110,7 +110,7 @@ LOC  OBJ            LINE     SOURCE
 100F FF               98     CFG_BYTE_0F:   DB  0xff          
                       99     END
                                      
-A51 MACRO ASSEMBLER  FWVERSION                                                            11/11/2025 13:52:37 PAGE     3
+A51 MACRO ASSEMBLER  FWVERSION                                                            11/21/2025 11:03:14 PAGE     3
 
 SYMBOL TABLE LISTING
 ------ ----- -------

@@ -1,3 +1,1 @@
-25/11/11_01: 2D Mode Pattern正常点亮
-25/11/11_02: 3D Mode Pattern正常点亮
-25/11/11_03: 调整3D PPS参数, PPS4: 0x30->0x10
+25/11/21_01: 按照D-PHY去配置GPIO, 调整MIPI PHY定义, 调整DCS和PPS还有Timing

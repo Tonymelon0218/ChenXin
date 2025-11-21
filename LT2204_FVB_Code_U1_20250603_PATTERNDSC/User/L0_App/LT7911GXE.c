@@ -58,6 +58,15 @@ void LT7911GXE_PowerOnInit(void)
     Drv_IOSoftLevel_Set(GPIO25_PWM3, HIGH); // GPIO25 default high
 #endif
 
+#ifdef CHENXIN_MIPI
+    Drv_Gpio_ModeSet(GPIO12_D1_VDET, OUT_PP_2x | NO_PU_PD, VOL_1_8);
+    Drv_Gpio_ModeSet(GPIO0_EARCN, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+    Drv_Gpio_ModeSet(GPIO15_D2_VDET, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+    Drv_Gpio_ModeSet(GPIO1_EARCP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+    Drv_Gpio_ModeSet(GPIO3_DHRX_DCAUXP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+    Drv_Gpio_ModeSet(GPIO24_PWM2, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+#endif
+
     LT7911GXE_I2SGPIO_Init();
 
 #if PWM_OUT == ENABLED

@@ -78,8 +78,8 @@ CFG_BYTE_1F:   DB  '*'
 CFG_BYTE_00:   DB  0x25		//客户ID
 	
 CFG_BYTE_01:   DB  0x11		//FW主版本	
-CFG_BYTE_02:   DB  0x11		//FW中版本
-CFG_BYTE_03:   DB  0x03		//FW小版本
+CFG_BYTE_02:   DB  0x21		//FW中版本
+CFG_BYTE_03:   DB  0x01		//FW小版本
 
 CFG_BYTE_04:   DB  0xff		//FW编译日期年
 CFG_BYTE_05:   DB  0xff		//FW编译日期月

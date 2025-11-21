@@ -1,11 +1,12 @@
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 1   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LT7911GXE
 OBJECT MODULE PLACED IN .\Objects\LT7911GXE.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L0_App\LT7911GXE.c LARGE OBJECTADVANCED OPTIMIZE
-                    -(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160@90_25111103.ORC) BROWSE INCDIR(..\User\L0_App;..
-                    -\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\LT7911GXE.lst) OBJECT(.\Objects\LT7911GXE.obj)
+                    -(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_01.ORC) BROWSE INCDIR(..\User\L
+                    -0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\LT7911GXE.lst) OBJECT(.\Objects\LT7911GX
+                    -E.obj)
 
 line level    source
 
@@ -61,9 +62,9 @@ line level    source
   50   1      #if CHIP_SEL == LT7911UXE_DP
                   Drv_Gpio_ModeSet(INT, OUT_PP_2x | NO_PU_PD, VOL_3_3);
                   Drv_IOSoftLevel_Set(INT, HIGH); // INT default high
-              #endif
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 2   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 2   
 
+              #endif
   54   1      
   55   1      /**********************LT6911GXD INT(GPIO25_PWM3) IO************************/
   56   1      #if CHIP_SEL == LT6911GXD_DP
@@ -71,39 +72,48 @@ line level    source
   58   1          Drv_IOSoftLevel_Set(GPIO25_PWM3, HIGH); // GPIO25 default high
   59   1      #endif
   60   1      
-  61   1          LT7911GXE_I2SGPIO_Init();
-  62   1      
-  63   1      #if PWM_OUT == ENABLED
-  64   1          {
-  65   2              PWM_Init(PWM_GPIO, PWM_FREQ, PWM_DUTY);
-  66   2          }
-  67   1      #endif
-  68   1      
-  69   1          l_ucTriggerEn = DISABLED;
-  70   1          TX_Event_Init();
+  61   1      #ifdef CHENXIN_MIPI
+  62   1          Drv_Gpio_ModeSet(GPIO12_D1_VDET, OUT_PP_2x | NO_PU_PD, VOL_1_8);
+  63   1          Drv_Gpio_ModeSet(GPIO0_EARCN, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+  64   1          Drv_Gpio_ModeSet(GPIO15_D2_VDET, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+  65   1          Drv_Gpio_ModeSet(GPIO1_EARCP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+  66   1          Drv_Gpio_ModeSet(GPIO3_DHRX_DCAUXP, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+  67   1          Drv_Gpio_ModeSet(GPIO24_PWM2, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+  68   1      #endif
+  69   1      
+  70   1          LT7911GXE_I2SGPIO_Init();
   71   1      
-  72   1      #if CUSTOM_EDID_SWITCH == ENABLED
+  72   1      #if PWM_OUT == ENABLED
+  73   1          {
+  74   2              PWM_Init(PWM_GPIO, PWM_FREQ, PWM_DUTY);
+  75   2          }
+  76   1      #endif
+  77   1      
+  78   1          l_ucTriggerEn = DISABLED;
+  79   1          TX_Event_Init();
+  80   1      
+  81   1      #if CUSTOM_EDID_SWITCH == ENABLED
                   Custom_Init();
               #endif
-  75   1      
-  76   1      #if TX_PORT_SIGN == MIPI_PORT
-  77   1          App_Brightness_Init();
-  78   1      #endif
-  79   1      }
-  80          
-  81          void LT7911GXE_DpRxVarInit(void)
-  82          {
-  83   1      #if CUSTOM_EDID_SWITCH == ENABLED
+  84   1      
+  85   1      #if TX_PORT_SIGN == MIPI_PORT
+  86   1          App_Brightness_Init();
+  87   1      #endif
+  88   1      }
+  89          
+  90          void LT7911GXE_DpRxVarInit(void)
+  91          {
+  92   1      #if CUSTOM_EDID_SWITCH == ENABLED
               
               #else
-  86   1          g_stDpRx.ucRxMaxLinkRate = DPRX_LINK_RATE;
-  87   1          g_stDpRx.ucRxMaxLaneCount = DPRX_LANE_COUNT;
-  88   1      #endif
-  89   1          g_stDpRx.b1Ssc_Support = DPRX_SSC_SUPPORT_EN;
-  90   1          g_stDpRx.b1Tps3_Support = DPRX_TPS3_SUPPORT_EN;
-  91   1          g_stDpRx.b1Tps4_Support = DPRX_TPS4_SUPPORT_EN;
-  92   1          memset(&g_stAuxStatus, 0x00, sizeof(AuxStatus_S));
-  93   1      #if DPRX_MST_MODE_EN == ENABLED
+  95   1          g_stDpRx.ucRxMaxLinkRate = DPRX_LINK_RATE;
+  96   1          g_stDpRx.ucRxMaxLaneCount = DPRX_LANE_COUNT;
+  97   1      #endif
+  98   1          g_stDpRx.b1Ssc_Support = DPRX_SSC_SUPPORT_EN;
+  99   1          g_stDpRx.b1Tps3_Support = DPRX_TPS3_SUPPORT_EN;
+ 100   1          g_stDpRx.b1Tps4_Support = DPRX_TPS4_SUPPORT_EN;
+ 101   1          memset(&g_stAuxStatus, 0x00, sizeof(AuxStatus_S));
+ 102   1      #if DPRX_MST_MODE_EN == ENABLED
                   memset(&g_stMstRxStatus, 0, sizeof(MstRxStatus_S));
                   g_stMstRxStatus.payload_update = 1;
                   g_stMstRxStatus.payload_clear = 1; // payload_update and payload_clear set to 1, is clear vc playload 
@@ -111,30 +121,30 @@ line level    source
                   g_stMstRxStatus.sink_cnt = DPRX_MST_SINK_CNT;
                   g_stAuxStatus.FecFlag = 0x00;
               #endif
- 100   1      }
- 101          
- 102          void LT7911GXE_I2SGPIO_Init(void)
- 103          {
- 104   1      #if GPIO_1P8V == ENABLED
+ 109   1      }
+ 110          
+ 111          void LT7911GXE_I2SGPIO_Init(void)
+ 112          {
+ 113   1      #if GPIO_1P8V == ENABLED
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 3   
+
                   Drv_I2sGpio_1P8VSet();
               #endif
- 107   1          //  Drv_Gpio_ModeSet(GPIO31_MCLKB, OUT_PP_2x|NO_PU_PD, VOL_3_3);
- 108   1          //  Drv_Gpio_ModeSet(GPIO32_SCLKB, OUT_PP_2x|NO_PU_PD, VOL_3_3);
- 109   1          //  Drv_Gpio_ModeSet(GPIO30_WSB, OUT_PP_2x|NO_PU_PD, VOL_3_3);
- 110   1          //  Drv_Gpio_ModeSet(GPIO29_SD0B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
- 111   1          //  Drv_Gpio_ModeSet(GPIO28_SD1B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
- 112   1          //  Drv_Gpio_ModeSet(GPIO27_SD2B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
- 113   1          //  Drv_Gpio_ModeSet(GPIO26_SD3B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
- 114   1      }
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 3   
-
- 115          
- 116          void GPIO_Trigger_Hdl(void)
- 117          {
- 118   1          static u32 ulCurrentTime = 0;
- 119   1      
- 120   1          /**********************LT7911UXE INT IO************************/
- 121   1      #if CHIP_SEL == LT7911UXE_DP
+ 116   1          //  Drv_Gpio_ModeSet(GPIO31_MCLKB, OUT_PP_2x|NO_PU_PD, VOL_3_3);
+ 117   1          //  Drv_Gpio_ModeSet(GPIO32_SCLKB, OUT_PP_2x|NO_PU_PD, VOL_3_3);
+ 118   1          //  Drv_Gpio_ModeSet(GPIO30_WSB, OUT_PP_2x|NO_PU_PD, VOL_3_3);
+ 119   1          //  Drv_Gpio_ModeSet(GPIO29_SD0B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
+ 120   1          //  Drv_Gpio_ModeSet(GPIO28_SD1B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
+ 121   1          //  Drv_Gpio_ModeSet(GPIO27_SD2B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
+ 122   1          //  Drv_Gpio_ModeSet(GPIO26_SD3B, OUT_PP_2x|NO_PU_PD, VOL_3_3);
+ 123   1      }
+ 124          
+ 125          void GPIO_Trigger_Hdl(void)
+ 126          {
+ 127   1          static u32 ulCurrentTime = 0;
+ 128   1      
+ 129   1          /**********************LT7911UXE INT IO************************/
+ 130   1      #if CHIP_SEL == LT7911UXE_DP
                   if (l_ucTriggerEn)
                   {
                       if (Drv_GPIO_INT_level_Get() == HIGH)
@@ -159,40 +169,40 @@ line level    source
                       }
                   }
               #endif
- 146   1      
- 147   1          /**********************LT6911GXD INT(GPIO25_PWM3) IO************************/
- 148   1      #if CHIP_SEL == LT6911GXD_DP
- 149   1          if (l_ucTriggerEn)
- 150   1          {
- 151   2              if (Drv_GPIO25_PWM3_level_Get() == HIGH)
- 152   2              {
- 153   3                  Drv_IOSoftLevel_Set(GPIO25_PWM3, LOW);
- 154   3                  Ocm_Timer_UpdLocalTime(&ulCurrentTime);
- 155   3                  printLT(PRINT_PRIO_HIG, "\nGPIO Trigger Low");
- 156   3              }
- 157   2          }
- 158   1      
- 159   1          if (l_ucTriggerEn)
- 160   1          {
- 161   2              if (Drv_GPIO25_PWM3_level_Get() == LOW)
- 162   2              {
- 163   3                  if (Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_50) == TRUE)
- 164   3                  {
- 165   4                      l_ucTriggerEn = DISABLED;
- 166   4                      Drv_IOSoftLevel_Set(GPIO25_PWM3, HIGH);
- 167   4                      ;
- 168   4                      printLT(PRINT_PRIO_HIG, "\nGPIO Trigger High");
- 169   4                  }
- 170   3              }
- 171   2          }
- 172   1      #endif
- 173   1      }
- 174          
- 175          void LT7911GXE_CCGpioInit(void)
- 176          {
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 4   
+ 155   1      
+ 156   1          /**********************LT6911GXD INT(GPIO25_PWM3) IO************************/
+ 157   1      #if CHIP_SEL == LT6911GXD_DP
+ 158   1          if (l_ucTriggerEn)
+ 159   1          {
+ 160   2              if (Drv_GPIO25_PWM3_level_Get() == HIGH)
+ 161   2              {
+ 162   3                  Drv_IOSoftLevel_Set(GPIO25_PWM3, LOW);
+ 163   3                  Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+ 164   3                  printLT(PRINT_PRIO_HIG, "\nGPIO Trigger Low");
+ 165   3              }
+ 166   2          }
+ 167   1      
+ 168   1          if (l_ucTriggerEn)
+ 169   1          {
+ 170   2              if (Drv_GPIO25_PWM3_level_Get() == LOW)
+ 171   2              {
+ 172   3                  if (Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_50) == TRUE)
+ 173   3                  {
+ 174   4                      l_ucTriggerEn = DISABLED;
+ 175   4                      Drv_IOSoftLevel_Set(GPIO25_PWM3, HIGH);
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 4   
 
- 177   1      #if TYPECRX_EN == ENABLED
+ 176   4                      ;
+ 177   4                      printLT(PRINT_PRIO_HIG, "\nGPIO Trigger High");
+ 178   4                  }
+ 179   3              }
+ 180   2          }
+ 181   1      #endif
+ 182   1      }
+ 183          
+ 184          void LT7911GXE_CCGpioInit(void)
+ 185          {
+ 186   1      #if TYPECRX_EN == ENABLED
               
               #if CUSTOM_EDID_SWITCH == ENABLED
                   UCCStatus.uclaneCount = g_stDpRx.ucRxMaxLaneCount;
@@ -243,64 +253,64 @@ line level    source
               #endif
               
               #endif
- 228   1      }
- 229          
- 230          void LT7911GXE_DpRxDpOrTypecDet(void)
- 231          {
- 232   1      #if TYPECRX_EN == ENABLED
+ 237   1      }
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 5   
+
+ 238          
+ 239          void LT7911GXE_DpRxDpOrTypecDet(void)
+ 240          {
+ 241   1      #if TYPECRX_EN == ENABLED
                   g_stDpRx.b1Input_Type_Sel = TYPEC_INTF;
               #else
- 235   1          g_stDpRx.b1Input_Type_Sel = DP_INTF;
- 236   1      #endif
- 237   1      }
- 238          
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 5   
-
- 239          void LT7911GXE_DpRxAudioInfoCvt(void)
- 240          {
- 241   1          AudioChlInfo_S stInfo;
- 242   1          Drv_DpRx_AudioInfoGet(&stInfo);
- 243   1      
- 244   1      #if TX_PORT_SIGN == MIPI_PORT
- 245   1      
- 246   1      #endif
- 247   1      #if TX_PORT_SIGN == LVDS_PORT
+ 244   1          g_stDpRx.b1Input_Type_Sel = DP_INTF;
+ 245   1      #endif
+ 246   1      }
+ 247          
+ 248          void LT7911GXE_DpRxAudioInfoCvt(void)
+ 249          {
+ 250   1          AudioChlInfo_S stInfo;
+ 251   1          Drv_DpRx_AudioInfoGet(&stInfo);
+ 252   1      
+ 253   1      #if TX_PORT_SIGN == MIPI_PORT
+ 254   1      
+ 255   1      #endif
+ 256   1      #if TX_PORT_SIGN == LVDS_PORT
               
               #endif
- 250   1      }
- 251          
- 252          void LT7911GXE_DpRxColorInfoCvt(void)
- 253          {
- 254   1          ColorInfo_S stInfo;
- 255   1          LtTiming_S stRxTimingInfo;
- 256   1      
- 257   1          Drv_DpRx_VidColorInfoGet(&stInfo);
- 258   1          printLT(PRINT_PRIO_HIG, "\nDp Rx vid info:");
- 259   1          printLT(PRINT_PRIO_HIG, "\nColorSpace[%bd]", stInfo.ucPixelEncoding);
- 260   1          printLT(PRINT_PRIO_HIG, "\nColorDepth[%bd]", stInfo.ucBitDepth);
- 261   1      
- 262   1      #if DPRX_DSC_DEC_SUPPORT == ENABLED
+ 259   1      }
+ 260          
+ 261          void LT7911GXE_DpRxColorInfoCvt(void)
+ 262          {
+ 263   1          ColorInfo_S stInfo;
+ 264   1          LtTiming_S stRxTimingInfo;
+ 265   1      
+ 266   1          Drv_DpRx_VidColorInfoGet(&stInfo);
+ 267   1          printLT(PRINT_PRIO_HIG, "\nDp Rx vid info:");
+ 268   1          printLT(PRINT_PRIO_HIG, "\nColorSpace[%bd]", stInfo.ucPixelEncoding);
+ 269   1          printLT(PRINT_PRIO_HIG, "\nColorDepth[%bd]", stInfo.ucBitDepth);
+ 270   1      
+ 271   1      #if DPRX_DSC_DEC_SUPPORT == ENABLED
                   if (Drv_DpRxDscDec_SwitchGet() == ENABLED)
                   {
                       Drv_DpRxDscDec_ColorInfoGet(&stInfo);
                   }
               #endif
- 268   1          Drv_DpRx_RxTimingGet(&stRxTimingInfo); //
- 269   1      
- 270   1      #if TX_PORT_SIGN == MIPI_PORT
- 271   1      
- 272   1      #endif
- 273   1      #if TX_PORT_SIGN == LVDS_PORT
+ 277   1          Drv_DpRx_RxTimingGet(&stRxTimingInfo); //
+ 278   1      
+ 279   1      #if TX_PORT_SIGN == MIPI_PORT
+ 280   1      
+ 281   1      #endif
+ 282   1      #if TX_PORT_SIGN == LVDS_PORT
               
               #endif
- 276   1      }
- 277          
- 278          void LT7911GXE_DpRxCscOrEncSel(void)
- 279          {
- 280   1          g_stDpRx.b1CscRxEnable = DISABLED;
- 281   1          printLT(PRINT_PRIO_HIG, "\nRx_Peak_clk =  %ld", g_stDpRx.ulRxPeakClk);
- 282   1      
- 283   1      #if CSC_SUPPORT == ENABLED
+ 285   1      }
+ 286          
+ 287          void LT7911GXE_DpRxCscOrEncSel(void)
+ 288          {
+ 289   1          g_stDpRx.b1CscRxEnable = DISABLED;
+ 290   1          printLT(PRINT_PRIO_HIG, "\nRx_Peak_clk =  %ld", g_stDpRx.ulRxPeakClk);
+ 291   1      
+ 292   1      #if CSC_SUPPORT == ENABLED
               #if TX_PORT_SIGN == MIPI_PORT
                   g_stMipiTx.ucTxFormat = MIPITX_VIDEO_FORMAT;
                   switch (g_stMipiTx.ucTxFormat)
@@ -308,6 +318,8 @@ line level    source
                   case DSI_RGB_565:
                   case DSI_RGB_666:
                   case DSI_RGB_888:
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 6   
+
                   case DSI_RGB_30:
                   case CSI_RGB_565:
                   case CSI_RGB_666:
@@ -318,8 +330,6 @@ line level    source
               
                   case DSI_YUV422_16Bit:
                   case DSI_YUV422_20Bit:
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 6   
-
                   case DSI_YUV422_24Bit:
                   case CSI_YUV422_8Bit:
                   case CSI_YUV422_10Bit:
@@ -356,9 +366,9 @@ line level    source
                   g_stDpRx.b1CscRxEnable = ENABLED;
                   printLT(PRINT_PRIO_HIG, "\nCsc enable");
               #endif
- 337   1      }
- 338          
- 339          #if CSC_SUPPORT == ENABLED
+ 346   1      }
+ 347          
+ 348          #if CSC_SUPPORT == ENABLED
               void LT7911GXE_DpRxCscCvt(void)
               {
                   if (g_stDpRx.b1CscRxEnable == ENABLED)
@@ -372,22 +382,22 @@ line level    source
                           g_stDpRx.b1CscRxOutRange = LIMIT_RANGE;
                       }
                       Drv_CscRx_RxtoTx(&g_stDpRx);
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 7   
+
                   }
               }
               #endif
- 356          
- 357          #if TX_PORT_SIGN == MIPI_PORT
- 358          void App_Brightness_Init(void)
- 359          {
- 360   1          l_ucBrightness = MIPITX_HSCMD_REG;
- 361   1          l_ucPreBrightness = l_ucBrightness;
- 362   1      }
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 7   
-
- 363          
- 364          void App_Brightness_Ctrl(void)
- 365          {
- 366   1      #if 0
+ 365          
+ 366          #if TX_PORT_SIGN == MIPI_PORT
+ 367          void App_Brightness_Init(void)
+ 368          {
+ 369   1          l_ucBrightness = MIPITX_HSCMD_REG;
+ 370   1          l_ucPreBrightness = l_ucBrightness;
+ 371   1      }
+ 372          
+ 373          void App_Brightness_Ctrl(void)
+ 374          {
+ 375   1      #if 0
                   code u8 ucaBrightness[7][3] = 
                   {
                       {0x51,0x00,0x00},/*0nit*/
@@ -436,6 +446,8 @@ line level    source
                               return;
                           }
                           while(Drv_GetIO_State(BRIGHTNESS_DOWN_GPIO) == LOW);/*Wait Brightness- Button Released*/
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 8   
+
                           //while(BKE0_C1_REG != 0);/*For I2C verify*/
                           LTLog(LOG_INFO, "Bright-");
                       }
@@ -446,270 +458,268 @@ line level    source
                   }
                   else
                   {
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 8   
-
                       return;
                   }
               #else
- 428   1      
- 429   1          u16 ucBrightness = 0;
- 430   1          u8 ucaBrightness[3] = {0};
- 431   1          if (g_stMipiTx.ucTxState == STATE_MIPITX_PLAY_BACK_7)
- 432   1          {
- 433   2              l_ucBrightness = MIPITX_HSCMD_REG;
- 434   2      
- 435   2              if (l_ucBrightness != l_ucPreBrightness) /*Detect Brightness Change*/
- 436   2              {
- 437   3      
- 438   3                  l_ucPreBrightness = l_ucBrightness;
- 439   3      
- 440   3                  ucBrightness = (l_ucBrightness + 1) * 16;
- 441   3                  ucBrightness = ucBrightness - 1;
- 442   3      
- 443   3                  ucaBrightness[0] = 0x51;
- 444   3                  ucaBrightness[1] = ucBrightness >> 8;
- 445   3                  ucaBrightness[2] = ucBrightness;
- 446   3                  LTLog(LOG_DEBUG, "ucaBrightness[1]:0x%02bx, ucaBrightness[2]:0x%02bx", ucaBrightness[1], ucaBr
+ 437   1      
+ 438   1          u16 ucBrightness = 0;
+ 439   1          u8 ucaBrightness[3] = {0};
+ 440   1          if (g_stMipiTx.ucTxState == STATE_MIPITX_PLAY_BACK_7)
+ 441   1          {
+ 442   2              l_ucBrightness = MIPITX_HSCMD_REG;
+ 443   2      
+ 444   2              if (l_ucBrightness != l_ucPreBrightness) /*Detect Brightness Change*/
+ 445   2              {
+ 446   3      
+ 447   3                  l_ucPreBrightness = l_ucBrightness;
+ 448   3      
+ 449   3                  ucBrightness = (l_ucBrightness + 1) * 16;
+ 450   3                  ucBrightness = ucBrightness - 1;
+ 451   3      
+ 452   3                  ucaBrightness[0] = 0x51;
+ 453   3                  ucaBrightness[1] = ucBrightness >> 8;
+ 454   3                  ucaBrightness[2] = ucBrightness;
+ 455   3                  LTLog(LOG_DEBUG, "ucaBrightness[1]:0x%02bx, ucaBrightness[2]:0x%02bx", ucaBrightness[1], ucaBr
              -ightness[2]);
- 447   3      
- 448   3                  LET_BITS(BKF9_B8_REG, 1, 0, 0x3); // U3
- 449   3                  Drv_MipiTx_HsCmd_En(ENABLED);
- 450   3      
- 451   3                  Drv_MipiTx_DcsPktWrite(0x39, 0x03, &ucaBrightness[0]);
- 452   3      
- 453   3                  Ocm_Delay1ms(50); /*Delay more than 1 frame*/
- 454   3                  Drv_MipiTx_HsCmd_En(DISABLED);
- 455   3                  CLEAR_BITS(BKF9_B8_REG, 1, 0);
- 456   3              }
- 457   2          }
- 458   1          else
- 459   1          {
- 460   2              return;
- 461   2          }
- 462   1      #endif
- 463   1      }
- 464          #endif
- 465          
- 466          void LT7911GXE_DpRx_Audio_Handle(void)
- 467          {
- 468   1          if (g_stDpRx.ucRxState > STATE_DPRX_AUDIO_INFO_CHK_15)
- 469   1          {
- 470   2      
- 471   2              if (Drv_DPRX_AudFs_Update() == TRUE)
- 472   2              {
- 473   3                  if (g_stDpRx.ucFsValue != AUD_FS_ZERO)
- 474   3                  {
- 475   4                      Drv_Gpio_ModeSet(GPIO31_MCLKB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 476   4                      Drv_Gpio_ModeSet(GPIO32_SCLKB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 477   4                      Drv_Gpio_ModeSet(GPIO30_WSB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 478   4                      Drv_Gpio_ModeSet(GPIO29_SD0B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 479   4                      Drv_Gpio_ModeSet(GPIO28_SD1B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 480   4                      Drv_Gpio_ModeSet(GPIO27_SD2B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 481   4                      Drv_Gpio_ModeSet(GPIO26_SD3B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
- 482   4                  }
- 483   3                  else
- 484   3                  {
- 485   4                      Drv_Gpio_ModeSet(GPIO31_MCLKB, OUT_DISABLE | NO_PU_PD, VOL_3_3);
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 9   
+ 456   3      
+ 457   3                  LET_BITS(BKF9_B8_REG, 1, 0, 0x3); // U3
+ 458   3                  Drv_MipiTx_HsCmd_En(ENABLED);
+ 459   3      
+ 460   3                  Drv_MipiTx_DcsPktWrite(0x39, 0x03, &ucaBrightness[0]);
+ 461   3      
+ 462   3                  Ocm_Delay1ms(50); /*Delay more than 1 frame*/
+ 463   3                  Drv_MipiTx_HsCmd_En(DISABLED);
+ 464   3                  CLEAR_BITS(BKF9_B8_REG, 1, 0);
+ 465   3              }
+ 466   2          }
+ 467   1          else
+ 468   1          {
+ 469   2              return;
+ 470   2          }
+ 471   1      #endif
+ 472   1      }
+ 473          #endif
+ 474          
+ 475          void LT7911GXE_DpRx_Audio_Handle(void)
+ 476          {
+ 477   1          if (g_stDpRx.ucRxState > STATE_DPRX_AUDIO_INFO_CHK_15)
+ 478   1          {
+ 479   2      
+ 480   2              if (Drv_DPRX_AudFs_Update() == TRUE)
+ 481   2              {
+ 482   3                  if (g_stDpRx.ucFsValue != AUD_FS_ZERO)
+ 483   3                  {
+ 484   4                      Drv_Gpio_ModeSet(GPIO31_MCLKB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 9   
 
- 486   4                      Drv_Gpio_ModeSet(GPIO32_SCLKB, OUT_DISABLE | NO_PU_PD, VOL_3_3);
- 487   4                      Drv_Gpio_ModeSet(GPIO30_WSB, OUT_DISABLE | NO_PU_PD, VOL_3_3);
- 488   4                      Drv_Gpio_ModeSet(GPIO29_SD0B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
- 489   4                      Drv_Gpio_ModeSet(GPIO28_SD1B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
- 490   4                      Drv_Gpio_ModeSet(GPIO27_SD2B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
- 491   4                      Drv_Gpio_ModeSet(GPIO26_SD3B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
- 492   4      
- 493   4                      Drv_Aud_Info_Update(FALSE);
- 494   4                      l_ucTriggerEn = ENABLED;
- 495   4                  }
- 496   3              }
- 497   2          }
- 498   1      }
- 499          
- 500          void LT7911GXE_DpRxMsgNotify(u8 ucEvent)
- 501          {
- 502   1          Mod_LMTx_EventMonitor(ucEvent);
- 503   1          switch (ucEvent)
- 504   1          {
- 505   2          case DPRX_SOURECE_PLUG_EVENT:
- 506   2              break;
- 507   2      
- 508   2          case DPRX_SOURECE_UNPLUG_EVENT:
- 509   2              g_stDpRx.ucFsValue = 0;
- 510   2              //                                                      #if TX_PORT_SIGN == MIPI_PORT
- 511   2              //                                                      LTLog(LOG_INFO, "DPRX_SOURECE_UNPLUG_EVENT");
- 512   2              //                                                      Drv_MipiTx_Info_Update(DPRX_SOURECE_UNPLUG_EVENT);
- 513   2              //                                                      #endif
- 514   2              //                                                      Drv_GPIO19Vsync_Set(DISABLED);
- 515   2              //                                                      l_ucTriggerEn = ENABLED;
- 516   2              Drv_Sys_DHTxPowerDomain(FALSE);
- 517   2              break;
- 518   2      
- 519   2          case DPRX_VIDEO_ON_EVENT:
- 520   2              Mod_DpRx_PeakClkCal();
- 521   2              LT7911GXE_DpRxCscOrEncSel();
- 522   2              LT7911GXE_DpRxColorInfoCvt();
- 523   2      #if CSC_SUPPORT == ENABLED
-                      LT7911GXE_DpRxCscCvt();
-              #endif
+ 485   4                      Drv_Gpio_ModeSet(GPIO32_SCLKB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 486   4                      Drv_Gpio_ModeSet(GPIO30_WSB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 487   4                      Drv_Gpio_ModeSet(GPIO29_SD0B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 488   4                      Drv_Gpio_ModeSet(GPIO28_SD1B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 489   4                      Drv_Gpio_ModeSet(GPIO27_SD2B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 490   4                      Drv_Gpio_ModeSet(GPIO26_SD3B, OUT_PP_2x | NO_PU_PD, VOL_3_3);
+ 491   4                  }
+ 492   3                  else
+ 493   3                  {
+ 494   4                      Drv_Gpio_ModeSet(GPIO31_MCLKB, OUT_DISABLE | NO_PU_PD, VOL_3_3);
+ 495   4                      Drv_Gpio_ModeSet(GPIO32_SCLKB, OUT_DISABLE | NO_PU_PD, VOL_3_3);
+ 496   4                      Drv_Gpio_ModeSet(GPIO30_WSB, OUT_DISABLE | NO_PU_PD, VOL_3_3);
+ 497   4                      Drv_Gpio_ModeSet(GPIO29_SD0B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
+ 498   4                      Drv_Gpio_ModeSet(GPIO28_SD1B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
+ 499   4                      Drv_Gpio_ModeSet(GPIO27_SD2B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
+ 500   4                      Drv_Gpio_ModeSet(GPIO26_SD3B, OUT_DISABLE | NO_PU_PD, VOL_3_3);
+ 501   4      
+ 502   4                      Drv_Aud_Info_Update(FALSE);
+ 503   4                      l_ucTriggerEn = ENABLED;
+ 504   4                  }
+ 505   3              }
+ 506   2          }
+ 507   1      }
+ 508          
+ 509          void LT7911GXE_DpRxMsgNotify(u8 ucEvent)
+ 510          {
+ 511   1          Mod_LMTx_EventMonitor(ucEvent);
+ 512   1          switch (ucEvent)
+ 513   1          {
+ 514   2          case DPRX_SOURECE_PLUG_EVENT:
+ 515   2              break;
+ 516   2      
+ 517   2          case DPRX_SOURECE_UNPLUG_EVENT:
+ 518   2              g_stDpRx.ucFsValue = 0;
+ 519   2              //                                                      #if TX_PORT_SIGN == MIPI_PORT
+ 520   2              //                                                      LTLog(LOG_INFO, "DPRX_SOURECE_UNPLUG_EVENT");
+ 521   2              //                                                      Drv_MipiTx_Info_Update(DPRX_SOURECE_UNPLUG_EVENT);
+ 522   2              //                                                      #endif
+ 523   2              //                                                      Drv_GPIO19Vsync_Set(DISABLED);
+ 524   2              //                                                      l_ucTriggerEn = ENABLED;
+ 525   2              Drv_Sys_DHTxPowerDomain(FALSE);
  526   2              break;
  527   2      
- 528   2          case DPRX_VIDEO_OFF_EVENT:
- 529   2              Drv_DpRx_SyncPolSet(DISABLED);
- 530   2              Drv_Sys_DecPowerDomain(TRUE);
- 531   2              Drv_Sys_EncPowerDomain(TRUE);
+ 528   2          case DPRX_VIDEO_ON_EVENT:
+ 529   2              Mod_DpRx_PeakClkCal();
+ 530   2              LT7911GXE_DpRxCscOrEncSel();
+ 531   2              LT7911GXE_DpRxColorInfoCvt();
  532   2      #if CSC_SUPPORT == ENABLED
+                      LT7911GXE_DpRxCscCvt();
+              #endif
+ 535   2              break;
+ 536   2      
+ 537   2          case DPRX_VIDEO_OFF_EVENT:
+ 538   2              Drv_DpRx_SyncPolSet(DISABLED);
+ 539   2              Drv_Sys_DecPowerDomain(TRUE);
+ 540   2              Drv_Sys_EncPowerDomain(TRUE);
+ 541   2      #if CSC_SUPPORT == ENABLED
                       Drv_CscRx_Init();
               #endif
- 535   2              TX_Event_Set(TX_VIDEO_OFF_EVENT_4);
- 536   2      
- 537   2              Drv_Sys_DHTxPowerDomain(FALSE);
- 538   2              break;
- 539   2      
- 540   2          case DPRX_HDCP_VER_CHG_EVENT:
- 541   2              break;
- 542   2      
- 543   2          case DPRX_COLORINFO_CHG_EVENT:
- 544   2              break;
- 545   2          case DPRX_TIMING_CHG_EVENT:
- 546   2              break;
- 547   2          case DPRX_PACKET_CHG_EVENT:
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 10  
+ 544   2              TX_Event_Set(TX_VIDEO_OFF_EVENT_4);
+ 545   2      
+ 546   2              Drv_Sys_DHTxPowerDomain(FALSE);
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 10  
 
- 548   2              break;
- 549   2          case DPRX_VRR_NOTIFY_EVENT:
+ 547   2              break;
+ 548   2      
+ 549   2          case DPRX_HDCP_VER_CHG_EVENT:
  550   2              break;
- 551   2          case DPRX_STATIC_HDR_NOTIFY_EVENT:
- 552   2      #if TX_PORT_SIGN == MIPI_PORT
- 553   2              if ((g_stMipiTx.b1SrcStaticHdrChg == FALSE) && (g_stMipiTx.ucTxState >= STATE_MIPITX_PLAY_BACK_7) 
+ 551   2      
+ 552   2          case DPRX_COLORINFO_CHG_EVENT:
+ 553   2              break;
+ 554   2          case DPRX_TIMING_CHG_EVENT:
+ 555   2              break;
+ 556   2          case DPRX_PACKET_CHG_EVENT:
+ 557   2              break;
+ 558   2          case DPRX_VRR_NOTIFY_EVENT:
+ 559   2              break;
+ 560   2          case DPRX_STATIC_HDR_NOTIFY_EVENT:
+ 561   2      #if TX_PORT_SIGN == MIPI_PORT
+ 562   2              if ((g_stMipiTx.b1SrcStaticHdrChg == FALSE) && (g_stMipiTx.ucTxState >= STATE_MIPITX_PLAY_BACK_7) 
              -&& (l_ucTriggerEn == DISABLED))
- 554   2              {
- 555   3                  g_stMipiTx.b1SrcStaticHdrEn = g_stDpRx.b1HdrEn;
- 556   3                  g_stMipiTx.b1SrcStaticHdrChg = TRUE;
- 557   3      
- 558   3                  LTLog(LOG_INFO, "DPRX_STATIC_HDR_NOTIFY_EVENT");
- 559   3                  Drv_MipiTx_Info_Update(DPRX_STATIC_HDR_NOTIFY_EVENT);
- 560   3      
- 561   3                  l_ucTriggerEn = ENABLED;
- 562   3              }
- 563   2      #endif
- 564   2      
- 565   2      #if TX_PORT_SIGN == LVDS_PORT
+ 563   2              {
+ 564   3                  g_stMipiTx.b1SrcStaticHdrEn = g_stDpRx.b1HdrEn;
+ 565   3                  g_stMipiTx.b1SrcStaticHdrChg = TRUE;
+ 566   3      
+ 567   3                  LTLog(LOG_INFO, "DPRX_STATIC_HDR_NOTIFY_EVENT");
+ 568   3                  Drv_MipiTx_Info_Update(DPRX_STATIC_HDR_NOTIFY_EVENT);
+ 569   3      
+ 570   3                  l_ucTriggerEn = ENABLED;
+ 571   3              }
+ 572   2      #endif
+ 573   2      
+ 574   2      #if TX_PORT_SIGN == LVDS_PORT
               
               #endif
- 568   2              break;
- 569   2          case DPRX_DYNAMIC_HDR_NOTIFY_EVENT:
- 570   2              break;
- 571   2          case DPRX_AUDIO_CHG_EVENT:
- 572   2              TX_Event_Set(TX_AUDIO_CHANGE_EVENT_5);
- 573   2      
- 574   2              break;
- 575   2      
- 576   2          case DPRX_FEC_NOTIFY_EVENT:
  577   2              break;
- 578   2          default:
+ 578   2          case DPRX_DYNAMIC_HDR_NOTIFY_EVENT:
  579   2              break;
- 580   2          }
- 581   1      }
- 582          
- 583          void LT7911GXE_TxSystem_Run(void)
- 584          {
- 585   1          u8 TxEvent;
- 586   1      
- 587   1          GPIO_Trigger_Hdl();
- 588   1      
- 589   1          if ((TX_Event_Trig() == TRUE) && (l_ucTriggerEn == DISABLED))
- 590   1          {
- 591   2              TxEvent = TX_Event_Get();
- 592   2              TX_Event_Clr();
- 593   2              switch (TxEvent)
- 594   2              {
- 595   3              case TX_SINK_PLUG_EVENT_1:
- 596   3                  break;
- 597   3              case TX_SINK_UNPLUG_EVENT_2:
- 598   3                  break;
- 599   3              case TX_VIDEO_ON_EVENT_3:
- 600   3      
- 601   3      #if TX_PORT_SIGN == MIPI_PORT
- 602   3                  LTLog(LOG_INFO, "TX_VIDEO_ON_EVENT_3");
- 603   3                  Drv_MipiTx_Info_Update(TX_VIDEO_ON_EVENT_3);
- 604   3      #endif
- 605   3                  Drv_GPIO19Vsync_Set(ENABLED);
- 606   3                  l_ucTriggerEn = ENABLED;
- 607   3                  Drv_Sys_DHTxPowerDomain(TRUE); // DHTxPoweroff
- 608   3                  break;
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 11  
+ 580   2          case DPRX_AUDIO_CHG_EVENT:
+ 581   2              TX_Event_Set(TX_AUDIO_CHANGE_EVENT_5);
+ 582   2      
+ 583   2              break;
+ 584   2      
+ 585   2          case DPRX_FEC_NOTIFY_EVENT:
+ 586   2              break;
+ 587   2          default:
+ 588   2              break;
+ 589   2          }
+ 590   1      }
+ 591          
+ 592          void LT7911GXE_TxSystem_Run(void)
+ 593          {
+ 594   1          u8 TxEvent;
+ 595   1      
+ 596   1          GPIO_Trigger_Hdl();
+ 597   1      
+ 598   1          if ((TX_Event_Trig() == TRUE) && (l_ucTriggerEn == DISABLED))
+ 599   1          {
+ 600   2              TxEvent = TX_Event_Get();
+ 601   2              TX_Event_Clr();
+ 602   2              switch (TxEvent)
+ 603   2              {
+ 604   3              case TX_SINK_PLUG_EVENT_1:
+ 605   3                  break;
+ 606   3              case TX_SINK_UNPLUG_EVENT_2:
+ 607   3                  break;
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 11  
 
- 609   3              case TX_VIDEO_OFF_EVENT_4:
+ 608   3              case TX_VIDEO_ON_EVENT_3:
+ 609   3      
  610   3      #if TX_PORT_SIGN == MIPI_PORT
- 611   3                  LTLog(LOG_INFO, "DPRX_VIDEO_OFF_EVENT");
- 612   3                  Drv_MipiTx_Info_Update(DPRX_VIDEO_OFF_EVENT);
+ 611   3                  LTLog(LOG_INFO, "TX_VIDEO_ON_EVENT_3");
+ 612   3                  Drv_MipiTx_Info_Update(TX_VIDEO_ON_EVENT_3);
  613   3      #endif
- 614   3                  Drv_GPIO19Vsync_Set(DISABLED);
+ 614   3                  Drv_GPIO19Vsync_Set(ENABLED);
  615   3                  l_ucTriggerEn = ENABLED;
- 616   3      
+ 616   3                  Drv_Sys_DHTxPowerDomain(TRUE); // DHTxPoweroff
  617   3                  break;
- 618   3      
- 619   3              case TX_AUDIO_CHANGE_EVENT_5:
- 620   3                  LT7911GXE_DpRxAudioInfoCvt();
- 621   3                  Drv_Aud_Info_Update(TRUE);
- 622   3                  l_ucTriggerEn = ENABLED;
- 623   3                  break;
- 624   3              default:
- 625   3                  break;
- 626   3              }
- 627   2          }
- 628   1      }
- 629          
- 630          void LT7911GXE_Main_Scan(void)
- 631          {
- 632   1      #if TYPECRX_EN == ENABLED
+ 618   3              case TX_VIDEO_OFF_EVENT_4:
+ 619   3      #if TX_PORT_SIGN == MIPI_PORT
+ 620   3                  LTLog(LOG_INFO, "DPRX_VIDEO_OFF_EVENT");
+ 621   3                  Drv_MipiTx_Info_Update(DPRX_VIDEO_OFF_EVENT);
+ 622   3      #endif
+ 623   3                  Drv_GPIO19Vsync_Set(DISABLED);
+ 624   3                  l_ucTriggerEn = ENABLED;
+ 625   3      
+ 626   3                  break;
+ 627   3      
+ 628   3              case TX_AUDIO_CHANGE_EVENT_5:
+ 629   3                  LT7911GXE_DpRxAudioInfoCvt();
+ 630   3                  Drv_Aud_Info_Update(TRUE);
+ 631   3                  l_ucTriggerEn = ENABLED;
+ 632   3                  break;
+ 633   3              default:
+ 634   3                  break;
+ 635   3              }
+ 636   2          }
+ 637   1      }
+ 638          
+ 639          void LT7911GXE_Main_Scan(void)
+ 640          {
+ 641   1      #if TYPECRX_EN == ENABLED
                   Mod_CC1Rx_Loop();
               #endif
- 635   1          // rx handler
- 636   1          Mod_DpRx_Handler();
- 637   1      
- 638   1      // tx handler
- 639   1      #if TX_PORT_SIGN == LVDS_PORT
+ 644   1          // rx handler
+ 645   1          Mod_DpRx_Handler();
+ 646   1      
+ 647   1      // tx handler
+ 648   1      #if TX_PORT_SIGN == LVDS_PORT
                   Mod_LvdsTx_Handler();
               #endif
- 642   1      #if TX_PORT_SIGN == MIPI_PORT
- 643   1          Mod_MipiTx_Handler();
- 644   1      #endif
- 645   1      
- 646   1      #if PWM_OUT == ENABLED
- 647   1          {
- 648   2              if (PWM_DUTY_REG != PWM_DUTY)
- 649   2              {
- 650   3                  PWM_Init(PWM_GPIO, PWM_FREQ, PWM_DUTY_REG);
- 651   3              }
- 652   2              else
- 653   2              {
- 654   3                  PWM_Init(PWM_GPIO, PWM_FREQ, PWM_DUTY);
- 655   3              }
- 656   2          }
- 657   1      #endif
- 658   1      
- 659   1          LT7911GXE_TxSystem_Run();
- 660   1      
- 661   1      #if CUSTOM_EDID_SWITCH == ENABLED
+ 651   1      #if TX_PORT_SIGN == MIPI_PORT
+ 652   1          Mod_MipiTx_Handler();
+ 653   1      #endif
+ 654   1      
+ 655   1      #if PWM_OUT == ENABLED
+ 656   1          {
+ 657   2              if (PWM_DUTY_REG != PWM_DUTY)
+ 658   2              {
+ 659   3                  PWM_Init(PWM_GPIO, PWM_FREQ, PWM_DUTY_REG);
+ 660   3              }
+ 661   2              else
+ 662   2              {
+ 663   3                  PWM_Init(PWM_GPIO, PWM_FREQ, PWM_DUTY);
+ 664   3              }
+ 665   2          }
+ 666   1      #endif
+ 667   1      
+ 668   1          LT7911GXE_TxSystem_Run();
+ 669   1      
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:03:16 PAGE 12  
+
+ 670   1      #if CUSTOM_EDID_SWITCH == ENABLED
                   Custom_Handler();
               #endif
- 664   1      
- 665   1          LT7911GXE_DpRx_Audio_Handle();
- 666   1      
- 667   1      #if TX_PORT_SIGN == MIPI_PORT
- 668   1          App_Brightness_Ctrl();
- 669   1      #endif
- 670   1      }
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/11/2025 13:52:38 PAGE 12  
-
- 671          
- 672          #endif
+ 673   1      
+ 674   1          LT7911GXE_DpRx_Audio_Handle();
+ 675   1      
+ 676   1      #if TX_PORT_SIGN == MIPI_PORT
+ 677   1          App_Brightness_Ctrl();
+ 678   1      #endif
+ 679   1      }
+ 680          
+ 681          #endif
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    972    ----
+   CODE SIZE        =   1006    ----
    CONSTANT SIZE    =    232    ----
    XDATA SIZE       =      7      54
    PDATA SIZE       =   ----    ----
