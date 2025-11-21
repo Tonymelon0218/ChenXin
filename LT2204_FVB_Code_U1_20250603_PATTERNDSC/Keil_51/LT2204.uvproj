@@ -46,7 +46,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02</OutputName>
+          <OutputName>LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_03</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>

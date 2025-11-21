@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 1   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODMIPITX
 OBJECT MODULE PLACED IN .\Objects\ModMipiTx.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L1_Module\ModMipiTx.c LARGE OBJECTADVANCED OPTIM
-                    -IZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02.ORC) BROWSE INCDIR(..\Use
+                    -IZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_03.ORC) BROWSE INCDIR(..\Use
                     -r\L0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\ModMipiTx.lst) OBJECT(.\Objects\ModMi
                     -piTx.obj)
 
@@ -62,7 +62,7 @@ line level    source
                       {CSI_YUV422_8Bit, 16, 0x01, 0x1E, MIPITX_CSI}, // 默认CSI
                       {CSI_YUV422_10Bit, 20, 0x31, 0x1F, MIPITX_CSI},
                       {CSI_YUV420_8Bit, 24, 0x20, 0x1A, MIPITX_CSI}
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 2   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 2   
 
               #endif
   54          };
@@ -126,7 +126,7 @@ line level    source
  112   2          case VIDEO_OFF_EVENT: // HDMIRX_VIDEO_OFF_EVENT DPRX_VIDEO_OFF_EVENT
  113   2              g_stMipiTx.b1UpstreamVideoReady = FALSE;
  114   2              LTLog(LOG_INFO, "RX Set Event:%02bx ", ucMsgType);
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 3   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 3   
 
  115   2              break;
  116   2          case VIDEO_ON_EVENT: // HDMIRX_VIDEO_ON_EVENT DPRX_VIDEO_ON_EVENT
@@ -190,7 +190,7 @@ line level    source
  174   2              {
  175   3                  if (g_stMipiTx.b1MIPITXStreamOn == OFF)
  176   3                  {
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 4   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 4   
 
  177   4                      ucMinState = min(ucMinState, STATE_MIPITX_VIDEO_OUT_5);
  178   4                      g_stMipiTx.b1MIPITXStreamOn = ON;
@@ -254,7 +254,7 @@ line level    source
                   if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
                   {
                       if (g_stMipiTx.ulMipiInClk > 600000) // over 4K60
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 5   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 5   
 
                       {
                           g_stMipiTx.ucTxPortNum = MIPI_2PORT; // TODO: 默认是CSI 8lane1901 如果超过600m
@@ -318,7 +318,7 @@ line level    source
  296   1          if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
  297   1          {
  298   2              g_stMipiTx.ulMipiDataRate = g_stMipiTx.ulMipiInClk * 2 * g_stMipiTx.ucBpp / (g_stMipiTx.ucTxPortNu
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 6   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 6   
 
              -m * g_stMipiTx.ucTxLaneNum);
  299   2          }
@@ -343,7 +343,7 @@ line level    source
  317   2              LTLog(LOG_INFO, "Burst Mode lane rate increase 80M");
  318   2          }
  319   1      
- 320   1          g_stMipiTx.ulMipiDataRate += 80000; // MIPI 速率增加80M
+ 320   1          g_stMipiTx.ulMipiDataRate += 50000; // MIPI 速率增加50M
  321   1      
  322   1          if (g_stMipiTx.ulMipiDataRate < MIPITX_PLL_LOW) // set byteclk minium value to 50M , phyclk minium val
              -ue is 400M
@@ -382,7 +382,7 @@ line level    source
  354   1          // todo:
  355   1          ucDataType = 0x0B;
  356   1          ucBppAndFmtSel = 0x25;
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 7   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 7   
 
  357   1      #endif
  358   1      
@@ -446,7 +446,7 @@ line level    source
  410   1      #else
                   Drv_MipiTx_DPhyClkDataSet();
                   Drv_MipiTx_DPhyClkModeSet(g_stMipiTx.b1MipiClockburst);
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 8   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 8   
 
               #if MIPITX_PRO_SEL == MIPITX_DSI
                   Drv_MipiTx_DSIVideoModeSet(g_stMipiTx.b1DSIVideoMode);
@@ -510,7 +510,7 @@ line level    source
  470   1      #if (MIPITX_PRO_SEL == MIPITX_CSI)
                   if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
                   {
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 9   
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 9   
 
                       if (g_stMipiTx.b1MipiClockburst == ENABLED)
                       {
@@ -574,7 +574,7 @@ line level    source
  531   2              rddly_min1 = (rdbyteclk * (g_stMipiTxVideoTiming.Hsw / 2 + g_stMipiTxVideoTiming.Hbp / 2) / rdpixc
              -lk) - rdhss;
  532   2          }
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 10  
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 10  
 
  533   1          else
  534   1          {
@@ -638,7 +638,7 @@ line level    source
  590   1          TempClock = Drv_System_FmGet(TOP_FM, 0);
  591   1          LTLog(LOG_INFO, "Ad_lmtx_read_clk = %lukhz", TempClock);
  592   1      }
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 11  
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 11  
 
  593          
  594          void Mod_MipiTx_StateHandler()
@@ -702,7 +702,7 @@ line level    source
  652   3                  Drv_Sys_EncPowerDomain(FALSE);
  653   3                  // Drv_Gpio_ModeSet(GPIO6_D2, OUT_PP_2x | NO_PU_PD, VOL_3_3);//led 适配飞线
  654   3                  Mod_MipiTxDscEnc_Config();
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 12  
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 12  
 
  655   3                  Ocm_Delay1ms(20);
  656   3      #endif
@@ -766,7 +766,7 @@ line level    source
  714   3      #endif
  715   3      
  716   3                  if (MIPITX_DPHY == g_stMipiTx.ucTxPhySel)
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 13  
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 13  
 
  717   3                  {
  718   4                      Drv_MipiTx_DPhyClkHsTrig();
@@ -828,9 +828,9 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   3142    ----
+   CODE SIZE        =   3141    ----
    CONSTANT SIZE    =    999    ----
-C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:27:23 PAGE 14  
+C51 COMPILER V9.60.0.0   MODMIPITX                                                         11/21/2025 11:48:29 PAGE 14  
 
    XDATA SIZE       =    609      53
    PDATA SIZE       =   ----    ----

@@ -1,0 +1,52 @@
+
+[INFO ] 
+PWM Duty:50
+ChipPowerOn
+FW_VER = 0x11,0x21,0x01
+Pattern pcr band = 0x13
+Pattern pcr lock
+[DEBUG] TxState = 0x02
+[INFO ] Mipi Out Disable
+[DEBUG] TxState = 0x03
+[INFO ] Mipi Out Disable
+[DEBUG] TxState = 0x04
+[DEBUG] DscEnc Slice = 4,CompressRatio = 3
+[DEBUG] DscEnc SliceHeight = 16,SliceWidth = 540,ChunkSize = 540
+[DEBUG] ColorSpace: 0 , ColorDepth: 3
+[INFO ] DSC[H]: Htotal:2376,Hactive:2160,Hsw:42,Hfp:108,Hbp:66,Hspol:1
+[INFO ] DSC[V]: Vtotal:2304,Vactive:2160,Vsw:10,Vfp:124,Vbp:10,Vspol:1
+[INFO ] Ad_csctx_half_pix_clk = 331348khz
+[INFO ] Ad_dsctx_dsc_rd_clk = 331347khz
+[INFO ] Ad_dsctx_dsc_clk = 55225khz
+[INFO ] Ad_dsctx_dsc_out_clk = 110450khz
+[DEBUG] MipiInClk:110449, calc ulByteclk:112892, ulPhyClk:903143, ucBpp:24, ucTxPortNum:0x01, ucTxLaneNum:0x03
+[DEBUG] vco DataRate: 903143, 903143
+[DEBUG] A207 RG_LMTXPLL_RANGE_SEL : 0x01
+[DEBUG] A20A LMTXPLL_DIV_SET : 0x49
+[DEBUG] LMTXPLL lock flag:0x15 
+[DEBUG] LMTXPLL calibration bandout: 0x31 0x31
+[INFO ] RX[H]: Htotal:792,Hactive:720,Hsw:6,Hfp:22,Hbp:44,Hspol:1
+[INFO ] RX[V]: Vtotal:2304,Vactive:2160,Vsw:10,Vfp:124,Vbp:10,Vspol:1
+[DEBUG] Byte clk:129Mhz
+[DEBUG] ck_post (0xF9A9) = 0x1e
+[DEBUG] ck_zero (0xF9A7) = 0x1e
+[DEBUG] hs_lpx  (0xF9A4) = 0x08
+[DEBUG] hs_prep (0xF9A5) = 0x07
+[DEBUG] hs_trail(0xF9A6) = 0x0d
+[DEBUG] hs_rqst (0xF98A) = 0x3a
+[INFO ] Port: 01, Lane: 03
+[INFO ] select Mipi Cphy
+[DEBUG] MIPITX_3D_MODE: MIPI_NO_3D_MODE
+[INFO ] DSC soft wordcnt;
+[DEBUG] rdbyteclk:128, rdpixclk:110 
+[DEBUG] hsw:6, hbp:44 hactive:720
+[DEBUG] ucBpp 0x18;
+[INFO ] read delay:188
+[INFO ] Ad_lmtx_write_clk = 130357khz
+[INFO ] Ad_lmtx_read_clk = 130357khz
+[INFO ] TxEvent-3
+[DEBUG] TxState = 0x05
+[INFO ] Mipi DCS END
+[INFO ] Mipi DSI Out
+[DEBUG] TxState = 0x06
+[DEBUG] TxState = 0x07

@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 1   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODSYSTEM
 OBJECT MODULE PLACED IN .\Objects\ModSystem.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L1_Module\ModSystem.c LARGE OBJECTADVANCED OPTIM
-                    -IZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02.ORC) BROWSE INCDIR(..\Use
+                    -IZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_03.ORC) BROWSE INCDIR(..\Use
                     -r\L0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\ModSystem.lst) OBJECT(.\Objects\ModSy
                     -stem.obj)
 
@@ -62,7 +62,7 @@ line level    source
                   pstDpTx->ucVscDb17 = 0x00; //[2:0]color depth
                   pstDpTx->ucVscDb18 = 0x03;
                   switch (pstRxInfo->ucBitDepth)
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 2   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 2   
 
                   {
               #if RX_PORT_SIGN == DP_PORT
@@ -126,7 +126,7 @@ line level    source
                       pstDpTx->ucVscDb16 = 0x20;
                       break;
                   case YCbCr420_3:
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 3   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 3   
 
                       pstDpTx->ucMsaValue &= 0xf3;
                       pstDpTx->ucMisc0 &= 0xf9;
@@ -190,7 +190,7 @@ line level    source
                           case DP_VSC_RGB_WIDE_FIXED_1:
                               pstDpTx->ucMisc0 |= 0x06;
                               break;
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 4   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 4   
 
                           case DP_VSC_RGB_WIDE_FLOATING_2:
                               pstDpTx->ucMisc0 |= 0x16;
@@ -254,7 +254,7 @@ line level    source
                               break;
                           case DP_VSC_XVYCC709_3: // xv709
                               pstDpTx->ucMisc0 |= 0x10;
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 5   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 5   
 
                               break;
                           default:
@@ -318,7 +318,7 @@ line level    source
                               pstDpTx->ucMisc0 |= 0x18; // YCBCR709
                               pstDpTx->ucVscDb16 |= 0x06;
                               break;
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 6   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 6   
 
                           case HDMI_EXT_ITUR_BT2020YCBCR_6:
                               pstDpTx->ucMisc0 |= 0x18; // YCBCR709
@@ -382,7 +382,7 @@ line level    source
                       {7680, 4320, 10800, 4400, 25, 195, FORMAT_PROG},
                       {7680, 4320, 9000, 4400, 30, 196, FORMAT_PROG},
                       {7680, 4320, 11000, 4500, 48, 197, FORMAT_PROG},
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 7   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 7   
 
               
                       {10240, 4320, 12500, 4950, 24, 210, FORMAT_PROG},
@@ -446,7 +446,7 @@ line level    source
                       {1920, 1080, 2640, 1125, 100, 64, FORMAT_PROG},
                       {1680, 720, 2000, 825, 100, 84, FORMAT_PROG},
                       {2560, 1080, 2970, 1250, 100, 91, FORMAT_PROG},
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 8   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 8   
 
                       {3840, 2160, 5280, 2250, 100, 117, FORMAT_PROG},
                       {5120, 2160, 6600, 2250, 100, 127, FORMAT_PROG},
@@ -510,7 +510,7 @@ line level    source
                   ucCheckSum += pstHdmiTx->szAudioInfo[6];
                   ucCheckSum += pstHdmiTx->szAudioInfo[7];
                   ucCheckSum += pstHdmiTx->szAudioInfo[8];
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 9   
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 9   
 
                   pstHdmiTx->szAudioInfo[3] = 256 - ucCheckSum; // pb0, check sum
               }
@@ -574,7 +574,7 @@ line level    source
                       else
                       {
                           pstHdmiTx->ucszAviPkt[2] |= 0x08; // PB3, [3:2]rgb-range: 01-limit, 10-full
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 10  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 10  
 
                       }
               #endif
@@ -638,7 +638,7 @@ line level    source
                       break;
                   default:
               #if RX_PORT_SIGN == DP_PORT
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 11  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 11  
 
                       if (pstRxInfo->b1VscPkg == TRUE)
                       {
@@ -702,7 +702,7 @@ line level    source
                               break;
                           }
                       }
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 12  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 12  
 
               #endif
               #if RX_PORT_SIGN == HDMI_PORT
@@ -766,7 +766,7 @@ line level    source
              -hz
               //        {
               //            pstHdmiTx->ucszAviPkt[3] = 0x75;//vic
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 13  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 13  
 
               //        }
               //        else if((pstRxTimingInfo->usHtol == 5280)&&(pstRxTimingInfo->usHact == 4096))//4096*2160 100HZ  
@@ -830,7 +830,7 @@ line level    source
               //        }
               //        else if((pstRxTimingInfo->usHtol == 5280)&&(pstRxTimingInfo->usHact == 3840))//3840*2160 50HZ  5
              -94Mhz
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 14  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 14  
 
               //        {
               //            pstHdmiTx->ucszAviPkt[3] = 0x60;//vic
@@ -894,7 +894,7 @@ line level    source
               //            pstHdmiTx->ucHdmiVic  = 0x04;
               //        }
               //        else if((pstRxTimingInfo->usHtol == 5280)&&(pstRxTimingInfo->usHact == 4096))//4096 X2160 25HZ
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 15  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 15  
 
               //        {
               //            pstHdmiTx->ucszAviPkt[3] = 0x63;//vic
@@ -958,7 +958,7 @@ line level    source
                   {
                       pstHdmiTx->ucHdmiVic = 0x02;
                       pstHdmiTx->ucszAviPkt[3] = 0x00;
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 16  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 16  
 
                   }
                   else if (pstHdmiTx->ucszAviPkt[3] == 93)
@@ -1022,7 +1022,7 @@ line level    source
                   }
               #endif
               
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 17  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 17  
 
                   if (pstRxInfo->ucPixelEncoding == YCbCr422_1) // 422 force 12bit
                   {
@@ -1086,7 +1086,7 @@ line level    source
 1011   1      }
 1012          
 1013          #if RX_PORT_SIGN == DP_PORT
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 18  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 18  
 
 1014          
 1015          #if CUSTOM_EDID_SWITCH == ENABLED
@@ -1150,7 +1150,7 @@ line level    source
                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 19  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 19  
 
                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -1214,7 +1214,7 @@ line level    source
                               l_CustomTimingStr.Vfp = 9;
                               l_CustomTimingStr.Vsw = 5;
                               l_CustomTimingStr.Vbp = 6;
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 20  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 20  
 
                               l_CustomTimingStr.Hspol = 1;
                               l_CustomTimingStr.Vspol = 1;           
@@ -1278,7 +1278,7 @@ line level    source
                   default:
                       break;
                   }
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 21  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 21  
 
               }
               
@@ -1342,7 +1342,7 @@ line level    source
                           }
               #else
                           {
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 22  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 22  
 
                               Drv_DpRx_HpdSet(HPD_LOW, IRQ_LOW);
                               Ocm_Delay1ms(300);
@@ -1365,12 +1365,12 @@ line level    source
 1280          struct TIMING l_CustomTimingStr =
 1281          // 2160x2160@120Hz
 1282          {
-1283              620420  // PixelClock/1000
-1284          ,   2244    // Htotal
+1283              657000  // PixelClock/1000
+1284          ,   2376    // Htotal
 1285          ,   2160    // Hactive
-1286          ,   42     // Hfp
-1287          ,   30      // Hsw
-1288          ,   12      // Hbp
+1286          ,   108     // Hfp
+1287          ,   42      // Hsw
+1288          ,   66      // Hbp
 1289          ,   2304    // Vtotal
 1290          ,   2160    // Vactive
 1291          ,   124     // Vfp
@@ -1406,7 +1406,7 @@ line level    source
 1321   1      0xA32A[6:0]  1        2           4          8           16          32          64
 1322   1          48      600     300         150         75          37.5        18.75       9.375
 1323   1          49      612.5   306.25      153.125     76.5625     38.28125    19.140625   9.5703125
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 23  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 23  
 
 1324   1          50      625     312.5       156.25      78.125      39.0625     19.53125    9.765625
 1325   1          51      637.5   318.75      159.375     79.6875     39.84375    19.921875   9.9609375
@@ -1462,7 +1462,7 @@ line level    source
 1375   1          halfPixelClock = 297M   : Value_0xA32A = 95(0x5F) , Value_0xA32B = 0xA0
 1376   1          halfPixelClock = 594M   : Value_0xA32A = 95(0x5F) , Value_0xA32B = 0x90
 1377   1          */
-1378   1          Value_0xA32A = 50;
+1378   1          Value_0xA32A = 53;
 1379   1          Value_0xA32B = 0x90;
 1380   1      
 1381   1          Drv_PtnTiming_Set(&l_CustomTimingStr);
@@ -1470,7 +1470,7 @@ line level    source
 1383   1          Drv_PtnPCR_Init();
 1384   1          Drv_PtnType_Sel();
 1385   1          Drv_PtnDataClk_Mux();
-C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:27:23 PAGE 24  
+C51 COMPILER V9.60.0.0   MODSYSTEM                                                         11/21/2025 11:48:30 PAGE 24  
 
 1386   1      }
 1387          #endif

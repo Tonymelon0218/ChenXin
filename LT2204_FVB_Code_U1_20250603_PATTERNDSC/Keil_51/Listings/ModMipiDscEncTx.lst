@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   MODMIPIDSCENCTX                                                   11/21/2025 11:27:23 PAGE 1   
+C51 COMPILER V9.60.0.0   MODMIPIDSCENCTX                                                   11/21/2025 11:48:30 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODMIPIDSCENCTX
 OBJECT MODULE PLACED IN .\Objects\ModMipiDscEncTx.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L1_Module\ModMipiDscEncTx.c LARGE OBJECTADVANCED
-                    - OPTIMIZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02.ORC) BROWSE INCDIR(
+                    - OPTIMIZE(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_03.ORC) BROWSE INCDIR(
                     -..\User\L0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\ModMipiDscEncTx.lst) OBJECT(.\O
                     -bjects\ModMipiDscEncTx.obj)
 
@@ -62,7 +62,7 @@ line level    source
              -iceHeight, g_stMipiTxDscEncConfig.usSliceWidth, g_stMipiTxDscEncConfig.usChunkSize);
   49   1      }
   50          
-C51 COMPILER V9.60.0.0   MODMIPIDSCENCTX                                                   11/21/2025 11:27:23 PAGE 2   
+C51 COMPILER V9.60.0.0   MODMIPIDSCENCTX                                                   11/21/2025 11:48:30 PAGE 2   
 
   51          void Mod_MipiTxDscEnc_Clk_Chk(void)
   52          {
@@ -126,7 +126,7 @@ line level    source
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    444    ----
-C51 COMPILER V9.60.0.0   MODMIPIDSCENCTX                                                   11/21/2025 11:27:23 PAGE 3   
+C51 COMPILER V9.60.0.0   MODMIPIDSCENCTX                                                   11/21/2025 11:48:30 PAGE 3   
 
    CONSTANT SIZE    =    338    ----
    XDATA SIZE       =   ----       4

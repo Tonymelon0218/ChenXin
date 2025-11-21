@@ -1,10 +1,10 @@
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 1   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LT7911GXE
 OBJECT MODULE PLACED IN .\Objects\LT7911GXE.obj
 COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L0_App\LT7911GXE.c LARGE OBJECTADVANCED OPTIMIZE
-                    -(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_02.ORC) BROWSE INCDIR(..\User\L
+                    -(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_C-PHY_2D_NoBurst_2160x2160@120_251121_03.ORC) BROWSE INCDIR(..\User\L
                     -0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\LT7911GXE.lst) OBJECT(.\Objects\LT7911GX
                     -E.obj)
 
@@ -62,7 +62,7 @@ line level    source
   50   1      #if CHIP_SEL == LT7911UXE_DP
                   Drv_Gpio_ModeSet(INT, OUT_PP_2x | NO_PU_PD, VOL_3_3);
                   Drv_IOSoftLevel_Set(INT, HIGH); // INT default high
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 2   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 2   
 
               #endif
   54   1      
@@ -126,7 +126,7 @@ line level    source
  111          void LT7911GXE_I2SGPIO_Init(void)
  112          {
  113   1      #if GPIO_1P8V == ENABLED
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 3   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 3   
 
                   Drv_I2sGpio_1P8VSet();
               #endif
@@ -190,7 +190,7 @@ line level    source
  173   3                  {
  174   4                      l_ucTriggerEn = DISABLED;
  175   4                      Drv_IOSoftLevel_Set(GPIO25_PWM3, HIGH);
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 4   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 4   
 
  176   4                      ;
  177   4                      printLT(PRINT_PRIO_HIG, "\nGPIO Trigger High");
@@ -254,7 +254,7 @@ line level    source
               
               #endif
  237   1      }
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 5   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 5   
 
  238          
  239          void LT7911GXE_DpRxDpOrTypecDet(void)
@@ -318,7 +318,7 @@ line level    source
                   case DSI_RGB_565:
                   case DSI_RGB_666:
                   case DSI_RGB_888:
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 6   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 6   
 
                   case DSI_RGB_30:
                   case CSI_RGB_565:
@@ -382,7 +382,7 @@ line level    source
                           g_stDpRx.b1CscRxOutRange = LIMIT_RANGE;
                       }
                       Drv_CscRx_RxtoTx(&g_stDpRx);
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 7   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 7   
 
                   }
               }
@@ -446,7 +446,7 @@ line level    source
                               return;
                           }
                           while(Drv_GetIO_State(BRIGHTNESS_DOWN_GPIO) == LOW);/*Wait Brightness- Button Released*/
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 8   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 8   
 
                           //while(BKE0_C1_REG != 0);/*For I2C verify*/
                           LTLog(LOG_INFO, "Bright-");
@@ -510,7 +510,7 @@ line level    source
  482   3                  if (g_stDpRx.ucFsValue != AUD_FS_ZERO)
  483   3                  {
  484   4                      Drv_Gpio_ModeSet(GPIO31_MCLKB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 9   
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 9   
 
  485   4                      Drv_Gpio_ModeSet(GPIO32_SCLKB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
  486   4                      Drv_Gpio_ModeSet(GPIO30_WSB, OUT_PP_2x | NO_PU_PD, VOL_3_3);
@@ -574,7 +574,7 @@ line level    source
  544   2              TX_Event_Set(TX_VIDEO_OFF_EVENT_4);
  545   2      
  546   2              Drv_Sys_DHTxPowerDomain(FALSE);
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 10  
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 10  
 
  547   2              break;
  548   2      
@@ -638,7 +638,7 @@ line level    source
  605   3                  break;
  606   3              case TX_SINK_UNPLUG_EVENT_2:
  607   3                  break;
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 11  
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 11  
 
  608   3              case TX_VIDEO_ON_EVENT_3:
  609   3      
@@ -702,7 +702,7 @@ line level    source
  667   1      
  668   1          LT7911GXE_TxSystem_Run();
  669   1      
-C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:27:26 PAGE 12  
+C51 COMPILER V9.60.0.0   LT7911GXE                                                         11/21/2025 11:48:32 PAGE 12  
 
  670   1      #if CUSTOM_EDID_SWITCH == ENABLED
                   Custom_Handler();
