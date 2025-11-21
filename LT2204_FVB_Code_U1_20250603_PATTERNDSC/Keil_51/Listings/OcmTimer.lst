@@ -1,0 +1,371 @@
+C51 COMPILER V9.60.0.0   OCMTIMER                                                          11/11/2025 13:52:36 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE OCMTIMER
+OBJECT MODULE PLACED IN .\Objects\OcmTimer.obj
+COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L3_Ocm\OcmTimer.c LARGE OBJECTADVANCED OPTIMIZE(
+                    -11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160@90_25111103.ORC) BROWSE INCDIR(..\User\L0_App;..\
+                    -User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\OcmTimer.lst) OBJECT(.\Objects\OcmTimer.obj)
+
+line level    source
+
+   1          //////////////////////////////////////
+   2          //Project:   LT2101
+   3          //Filename:  Timer.c
+   4          //Version:   V1.0
+   5          //Copyright: Lontium
+   6          //////////////////////////////////////
+   7          #include "Include.h"
+   8          
+   9          #define TEMP_T0 (65535 - (48 * INT_TIME) / 12)//25MHZ
+  10          #define T0_TH   (u8)((TEMP_T0) >> 8)
+  11          #define T0_TL   (u8)(TEMP_T0)
+  12          
+  13          //T1_TH = T1TL = 256 - 40MHz * 2 / (384 * BAUDRATE)
+  14          #if BAUDRATE == 18750
+              #define T1_TH   246
+              #define T1_TL   246
+              #elif BAUDRATE == 37500
+              #define T1_TH   251
+              #define T1_TL   251
+              #elif BAUDRATE == 62500//for 48M sysclk
+  21          #define T1_TH   252
+  22          #define T1_TL   252
+  23          #elif BAUDRATE == 52000//for 40M sysclk
+              #define T1_TH   252
+              #define T1_TL   252
+              #endif
+  27          
+  28          u32 g_ulSystemTime;
+  29          
+  30          //===========================================
+  31          //func  :used to that delay is required
+  32          //input :N/A
+  33          //output:N/A
+  34          //return:void
+  35          //Info  :N/A
+  36          //===========================================
+  37          void Ocm_Delay1ms(IN u16 var)          
+  38          {
+  39   1          u16 i;
+  40   1          while(var--)
+  41   1          {
+  42   2              #if SYSCLK == SYS_CLK_40M
+                      for(i = 0; i< 600 ; i++);
+                      #endif
+  45   2              #if SYSCLK == SYS_CLK_48M
+  46   2              for(i = 0; i< 628; i++);
+  47   2              #endif
+  48   2          }
+  49   1      }
+  50          
+  51          //===========================================
+  52          //func  :used to that delay is required
+  53          //input :N/A
+C51 COMPILER V9.60.0.0   OCMTIMER                                                          11/11/2025 13:52:36 PAGE 2   
+
+  54          //output:N/A
+  55          //return:void
+  56          //Info  :N/A
+  57          //===========================================
+  58          void Ocm_Delay1us(IN u16 var)          
+  59          {
+  60   1          while(var--)//0.97us each cycle
+  61   1          {
+  62   2              ;
+  63   2          }
+  64   1      }
+  65          
+  66          //===========================================
+  67          //func  :timer0 init
+  68          //input :N/A
+  69          //output:N/A
+  70          //return:void
+  71          //Info  :g_ulSystemTime is count by this timer
+  72          //===========================================
+  73          void Ocm_Timer0_SysTimerInit(void)
+  74          {
+  75   1          TMOD |= 0x01;
+  76   1          TH0 = T0_TH;
+  77   1          TL0 = T0_TL;
+  78   1          
+  79   1          EA =  1;
+  80   1          ET0 = 1;
+  81   1          TR0 = 1;
+  82   1      }
+  83          
+  84          //=================
+  85          //Func  :uart band rate set
+  86          //InPut :N/A
+  87          //OutPut:N/A
+  88          //return:void
+  89          //Info  :macro define BAUDRATE determine rate
+  90          //TH1=256-(fosc*S_MOD)/(baudrate*12*32);//SMOD=1,
+  91          //TL1=256-(fosc*S_MOD)/(baudrate*12*32);
+  92          //=================
+  93          void Ocm_Timer1_UartBaudRateSet(void)
+  94          {
+  95   1          SCON = 0x50;
+  96   1          PCON |=0x80;//smod=1, the baud rate is double
+  97   1          TMOD |=0x20;
+  98   1          TH1 = T1_TH;
+  99   1          TL1 = T1_TL;
+ 100   1          TR1 = 1;
+ 101   1          TI  = 1;//for printf function must setting TI = 1
+ 102   1      
+ 103   1          REN = 1;
+ 104   1          RI  = 1;
+ 105   1      }
+ 106          //=================
+ 107          //Func  : external int0
+ 108          //InPut :N/A
+ 109          //OutPut:N/A
+ 110          //return:void
+ 111          //Info  :external int for dprx typec rx or other external int need
+ 112          //=================
+ 113          
+ 114          void Ocm_External0_IntSet(void)
+ 115          {
+C51 COMPILER V9.60.0.0   OCMTIMER                                                          11/11/2025 13:52:36 PAGE 3   
+
+ 116   1          IT0 = 0;//TCON = 0x05; ext0 dianpingchufa
+ 117   1          EX0 = 1;
+ 118   1          PX0 = 1;// EX0 max priorty
+ 119   1          EA =  1;
+ 120   1      }
+ 121          //=================
+ 122          //Func  : external int1
+ 123          //InPut :N/A
+ 124          //OutPut:N/A
+ 125          //return:void
+ 126          //Info  :external int for dprx typec rx or other external int need
+ 127          //=================
+ 128          
+ 129          void Ocm_External1_IntSet(void)
+ 130          {
+ 131   1          IT1 = 0;//TCON = 0x05; ext1 dianpingchufa
+ 132   1          EX1 = 1;
+ 133   1          EA =  1;
+ 134   1      }
+ 135          
+ 136          void Ocm_TR2_ValueSet(void)//4ms
+ 137          {
+ 138   1          TH2 = 0xF1;//700us
+ 139   1          TL2 = 0xA6;
+ 140   1      }
+ 141          //============================
+ 142          //Func  : external int2
+ 143          //InPut :N/A
+ 144          //OutPut:N/A
+ 145          //return:void
+ 146          //Info  :external int for dprx typec rx or other external int need
+ 147          //=============================
+ 148          
+ 149          void Ocm_External2_IntSet(void)
+ 150          {
+ 151   1          EIP = 0x00;//ex2 low pority
+ 152   1          EIE = 0x01;//enable ex2
+ 153   1          EA =  1;
+ 154   1      }
+ 155          
+ 156          //=================
+ 157          //Func  : external it2
+ 158          //InPut :N/A
+ 159          //OutPut:N/A
+ 160          //return:void
+ 161          //Info  :timer2 for send typec ps rdy
+ 162          //=================
+ 163          
+ 164          void Ocm_Timer2_Set(void)
+ 165          {
+ 166   1          TH2 = 0x00;//
+ 167   1          TL2 = 0x00;
+ 168   1          TR2 = 1;   //enable Time0
+ 169   1      }
+ 170          
+ 171          void Ocm_Timer2_IntSet(void)
+ 172          {
+ 173   1          T2CON = 0x01;//EXEN2
+ 174   1          TL2 = 0x00;//time 0 disable
+ 175   1          TH2 = 0x00;//time 1 disable
+ 176   1          TR2 = 0;
+ 177   1          ET2 = 1;
+C51 COMPILER V9.60.0.0   OCMTIMER                                                          11/11/2025 13:52:36 PAGE 4   
+
+ 178   1          EA =  1;
+ 179   1      }
+ 180          
+ 181          void Ocm_Timer2ForPsRdy_Set(void)
+ 182          {
+ 183   1          TH2 = 0xC0;//4ms
+ 184   1          TL2 = 0x00;
+ 185   1          TR2 = 1;   //enable Time0
+ 186   1      }
+ 187          //===========================================
+ 188          //func  :update system time to local
+ 189          //input :*pstCurtTime is local time
+ 190          //output:*pstCurtTime will become system time
+ 191          //return:void
+ 192          //Info  :N/A
+ 193          //===========================================
+ 194          void Ocm_Timer_UpdLocalTime(INOUT u32 *pstCurtTime)
+ 195          {
+ 196   1          u32 ulPresentTime = g_ulSystemTime;
+ 197   1      
+ 198   1          if (abs(g_ulSystemTime - ulPresentTime) > 0x7f)
+ 199   1          {
+ 200   2              ulPresentTime = g_ulSystemTime;
+ 201   2          }
+ 202   1          *pstCurtTime = ulPresentTime;
+ 203   1      }
+ 204          
+ 205          //===========================================
+ 206          //func  :system time init
+ 207          //input :N/A
+ 208          //output:N/A
+ 209          //return:void
+ 210          //Info  :N/A
+ 211          //===========================================
+ 212          void Ocm_Timer_ParaInit(void)
+ 213          {
+ 214   1          g_ulSystemTime = 0;
+ 215   1      }
+ 216          
+ 217          //===========================================
+ 218          //func  :check current time whether overflows
+ 219          //input :*ulSource is local time, ulDelay is current delay time
+ 220          //output:*ulSource will become system time
+ 221          //return:TRUE-overflow, FALSE-not
+ 222          //Info  :N/A
+ 223          //===========================================
+ 224          u8 Ocm_Timer_IsOverFlow(INOUT u32 *ulSource, IN u32 ulDelay)
+ 225          {
+ 226   1          u32 ulTimeS;
+ 227   1          u32 ulTimeG;
+ 228   1      
+ 229   1          ulTimeG = g_ulSystemTime;
+ 230   1          ulTimeS = *ulSource;
+ 231   1      
+ 232   1          if(ulTimeS > ulTimeG)
+ 233   1          {
+ 234   2              *ulSource = ulTimeG;
+ 235   2              ulTimeS = ulTimeG;
+ 236   2              return FALSE;
+ 237   2          }
+ 238   1          if((ulTimeS + ulDelay) < ulTimeG)
+ 239   1          {
+C51 COMPILER V9.60.0.0   OCMTIMER                                                          11/11/2025 13:52:36 PAGE 5   
+
+ 240   2              return TRUE;
+ 241   2          }
+ 242   1          return FALSE;
+ 243   1      }
+ 244          //===========================================
+ 245          //func  :uart struct data init
+ 246          //input :N/A
+ 247          //output:N/A
+ 248          //return:void
+ 249          //Info  :N/A
+ 250          //===========================================
+ 251          void Ocm_Timer_UartParaInit(void)
+ 252          {
+ 253   1          #if 0
+                  g_stUartData.RxSwitch = OFF;
+                  #endif
+ 256   1      }
+ 257          
+ 258          //===========================================
+ 259          //func  :acquire uart rx data, and save to g_stUartData.RxData
+ 260          //input :N/A
+ 261          //output:N/A
+ 262          //return:void
+ 263          //Info  :N/A
+ 264          //===========================================
+ 265          void Ocm_Timer_UartDataGet(void)
+ 266          {
+ 267   1          #if 0
+                  if (RI == 0)
+                  {
+                      return;
+                  }
+                  if((g_stUartData.RxSwitch == ON) && ((g_stUartData.RxNumber + 1) < RX_BUFF_MAX))
+                  {
+                      g_stUartData.RxData[g_stUartData.RxNumber++] = (u8)SBUF;
+                  }
+                  RI = 0;
+                  #endif
+ 278   1      }
+ 279          //===========================================
+ 280          //func  :common init
+ 281          //input :N/A
+ 282          //output:N/A
+ 283          //return:void
+ 284          //Info  :N/A
+ 285          //===========================================
+ 286          void Ocm_Timer_Init(void)
+ 287          {
+ 288   1          Ocm_Timer_ParaInit();
+ 289   1          Ocm_Timer0_SysTimerInit();
+ 290   1          Ocm_Timer1_UartBaudRateSet();
+ 291   1          Ocm_External0_IntSet();
+ 292   1          Ocm_External1_IntSet();
+ 293   1          Ocm_External2_IntSet();
+ 294   1          Ocm_Timer2_IntSet();
+ 295   1          Ocm_Timer_UartParaInit();
+ 296   1      }
+ 297          
+ 298          //===========================================
+ 299          //func  :timer0 interrupt
+ 300          //input :N/A
+ 301          //output:N/A
+C51 COMPILER V9.60.0.0   OCMTIMER                                                          11/11/2025 13:52:36 PAGE 6   
+
+ 302          //return:void
+ 303          //Info  :N/A
+ 304          //===========================================
+ 305          void Timer0Interrupt(void) interrupt 1
+ 306          {
+ 307   1          TH0 = T0_TH;
+ 308   1          TL0 = T0_TL;
+ 309   1          g_ulSystemTime++;
+ 310   1          Ocm_Timer_UartDataGet();
+ 311   1          #if ((CHIP_SEL == LT8711GXE)||(CHIP_SEL == LT7911UXE_DP)||(CHIP_SEL == LT6911GXD_DP)||(CHIP_SEL == LT6
+             -711GXE))
+ 312   1          #if TYPECRX_EN == ENABLED
+                  #if TYPEC_FRSWAP_EN == ENABLED
+                  if(UCCStatus.ucFlow_Step != 0x01)
+                  {
+                      return;
+                  }
+                  if((DCCStatus.b1FrTriggle == TRUE)&&(UCCStatus.b1PrDone == TRUE))
+                  {
+                      if(BKE5_A1_REG & BIT0_1)
+                      {
+                          DRV_FrTrig_Send();
+                          UCCStatus.ucFRSwaping = FRSWAP_INITIATE;
+              //            SOURCE_GPIO_CTRL(LOW);
+                          Mod_CC2PowerLost_VarIni();
+                      }
+                  }
+                  #endif
+                  #endif
+ 330   1          #endif
+ 331   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    477    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      4      22
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

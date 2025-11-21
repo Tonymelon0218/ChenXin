@@ -1,0 +1,1 @@
+"..\User\L2_Drive\Register.c" LARGE OBJECTADVANCED OPTIMIZE (11,SIZE) REGFILE (.\Objects\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160@90_25111103.ORC) BROWSE INCDIR(..\User\L0_App;..\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\Register.lst) OBJECT(.\Objects\Register.obj)

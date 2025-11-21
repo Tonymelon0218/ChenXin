@@ -1,0 +1,1 @@
+"..\User\L3_Ocm\FwVersion.asm" SET (LARGE) DEBUG PRINT(.\Listings\FwVersion.lst) OBJECT(.\Objects\FwVersion.obj) EP

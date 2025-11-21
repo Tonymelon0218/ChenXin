@@ -1,0 +1,129 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              11/11/2025 13:52:37 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L0_App\main.c LARGE OBJECTADVANCED OPTIMIZE(11,S
+                    -IZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160@90_25111103.ORC) BROWSE INCDIR(..\User\L0_App;..\User
+                    -\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          //////////////////////////////////////
+   2          // Project:   LT2101
+   3          // Filename:  main.c
+   4          // Version:   V1.0
+   5          // Copyright: Lontium
+   6          //////////////////////////////////////
+   7          #include "Include.h"
+   8          //===========================================
+   9          // func  :main
+  10          // input :N/A
+  11          // output:N/A
+  12          // return:void
+  13          // Info  :N/A
+  14          //===========================================
+  15          void App_ChipFw_Read(void)
+  16          {
+  17   1          BKE0_80_REG = CBYTE[0x01000]; // customer ID
+  18   1          BKE0_81_REG = CBYTE[0x01001]; // Major Version
+  19   1          BKE0_82_REG = CBYTE[0x01002]; // Middle Version
+  20   1          BKE0_83_REG = CBYTE[0x01003]; // Minor Version
+  21   1      }
+  22          
+  23          void main(void)
+  24          {
+  25   1          Drv_System_XtalSet(); // xtal set
+  26   1          Ocm_Timer_Init();
+  27   1          Drv_IO_UartSet();
+  28   1          App_ChipFw_Read();
+  29   1      #if CHIP_SEL == LT6711GXE
+                  LT6711GXE_PowerOnInit();
+                  printLT(PRINT_PRIO_HIG, "\nLT6711GXE");
+              #endif
+  33   1      
+  34   1      #if CHIP_SEL == LT8711GXE
+                  LT8711GXE_PowerOnInit();
+                  printLT(PRINT_PRIO_HIG, "\nLT8711GXE");
+              #endif
+  38   1      
+  39   1      #if ((CHIP_SEL == LT6911GXD_HD) || (CHIP_SEL == LT7911UXE_HD))
+                  LT6911GXE_PowerOnInit();
+                  printLT(PRINT_PRIO_HIG, "\nLT6911GXE");
+              #endif
+  43   1      
+  44   1      #if ((CHIP_SEL == LT7911UXE_DP) || (CHIP_SEL == LT6911GXD_DP))
+  45   1          LT7911GXE_PowerOnInit();
+  46   1          printLT(PRINT_PRIO_HIG, "\nChipPowerOn");
+  47   1      #endif
+  48   1      
+  49   1      #if CHIP_SEL == LT86121GXE
+                  LT86121GXE_PowerOnInit();
+                  printLT(PRINT_PRIO_HIG, "\nLT86121GXE");
+              #endif
+  53   1      
+C51 COMPILER V9.60.0.0   MAIN                                                              11/11/2025 13:52:37 PAGE 2   
+
+  54   1          printLT(PRINT_PRIO_HIG, "\nFW_VER = 0x%02bx,0x%02bx,0x%02bx", BKE0_81_REG, BKE0_82_REG, BKE0_83_REG);
+  55   1      
+  56   1      #if BB_EN == ENABLED
+                  Drv_BB_Init(ENABLED);
+              #endif
+  59   1      
+  60   1          while (1)
+  61   1          {
+  62   2      #if HDMITX_VID_PATTERN_SEL != NO_PATTERN
+                      Mod_HdmiTx_Pattern();
+              #endif
+  65   2      
+  66   2      #if DPTX_VID_PATTERN_SEL != NO_PATTERN
+                      Mod_DpTx_Pattern();
+              #endif
+  69   2      
+  70   2      #if LVDXTX_VID_PATTERN_MODE != NO_PATTERN
+                      Mod_LvdsTx_Pattern();
+              #endif
+  73   2      
+  74   2      #if MIPITX_VID_PATTERN_MODE != NO_PATTERN
+  75   2              Mod_MIPITx_Pattern();
+  76   2      #endif
+  77   2      
+  78   2      #if CHIP_SEL == LT6711GXE
+                      LT6711GXE_Main_Scan();
+              #endif
+  81   2      
+  82   2      #if CHIP_SEL == LT8711GXE
+                      LT8711GXE_Main_Scan();
+              #endif
+  85   2      
+  86   2      #if ((CHIP_SEL == LT6911GXD_HD) || (CHIP_SEL == LT7911UXE_HD))
+                      LT6911GXE_Main_Scan();
+              #endif
+  89   2      
+  90   2      #if ((CHIP_SEL == LT7911UXE_DP) || (CHIP_SEL == LT6911GXD_DP))
+  91   2              LT7911GXE_Main_Scan();
+  92   2      #endif
+  93   2      
+  94   2      #if CHIP_SEL == LT86121GXE
+                      LT86121GXE_Main_Scan();
+              #endif
+  97   2          }
+  98   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    107    ----
+   CONSTANT SIZE    =     47    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

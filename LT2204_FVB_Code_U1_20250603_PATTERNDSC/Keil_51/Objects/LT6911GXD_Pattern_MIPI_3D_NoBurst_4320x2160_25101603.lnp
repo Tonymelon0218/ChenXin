@@ -1,0 +1,18 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\LT7911GXE.obj",
+".\Objects\LT6911GXD_PATTERN_DSC.LIB",
+".\Objects\Interrupt.obj",
+".\Objects\ModDpRx.obj",
+".\Objects\ModMipiTx.obj",
+".\Objects\ModSystem.obj",
+".\Objects\ModMipiDscEncTx.obj",
+".\Objects\ModDCS.obj",
+".\Objects\Register.obj",
+".\Objects\OcmPrint.obj",
+".\Objects\OcmTimer.obj",
+".\Objects\FwVersion.obj" 
+TO ".\Objects\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160_25101603" 
+REGFILE (.\Objects\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160_25101603.ORC) 
+PRINT(".\Listings\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160_25101603.map") DISABLEWARNING (16) 
+REMOVEUNUSED 

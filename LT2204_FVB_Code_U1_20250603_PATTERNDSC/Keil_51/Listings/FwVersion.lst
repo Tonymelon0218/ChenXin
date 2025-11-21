@@ -1,0 +1,142 @@
+A51 MACRO ASSEMBLER  FWVERSION                                                            11/11/2025 13:52:37 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\FwVersion.obj
+ASSEMBLER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\A51.EXE ..\User\L3_Ocm\FwVersion.asm SET(LARGE) DEBUG PRINT(.\L
+                      istings\FwVersion.lst) OBJECT(.\Objects\FwVersion.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+----                   1     CSEG AT 0x1000           
+                       2     
+                       3     
+                       4     
+                       5     
+                       6     
+                       7     
+                       8     
+                       9     
+                      10     
+                      11     
+                      12     
+                      13     
+                      14     
+                      15     
+                      16     
+                      17     
+                      18     
+                      19     
+                      20     
+                      21     
+                      22     
+                      23     
+                      24     
+                      25     
+                      26     
+                      27     
+                      28     
+                      29     
+                      30     
+                      31     
+                      32     
+                      33     
+                      34     
+                      35     
+                      36     
+                      37     
+                      38     
+                      39     
+                      40     
+                      41     
+                      42     
+                      43     
+                      44     
+                      45     
+                      46     
+                      47     
+                      48     
+                      49     
+                      50     
+                      51     
+                      52     
+                      53     
+                      54     
+                      55     
+                      56     
+                      57     
+A51 MACRO ASSEMBLER  FWVERSION                                                            11/11/2025 13:52:37 PAGE     2
+
+                      58     
+                      59     
+                      60     
+                      61     
+                      62     
+                      63     
+                      64     
+                      65     
+                      66     
+                      67     
+                      68     
+                      69     
+                      70     
+                      71     
+                      72     
+                      73     
+                      74     
+                      75     
+                      76     
+                      77     
+1000 25               78     CFG_BYTE_00:   DB  0x25          
+                      79             
+1001 11               80     CFG_BYTE_01:   DB  0x11          
+1002 11               81     CFG_BYTE_02:   DB  0x11          
+1003 03               82     CFG_BYTE_03:   DB  0x03          
+                      83     
+1004 FF               84     CFG_BYTE_04:   DB  0xff          
+1005 FF               85     CFG_BYTE_05:   DB  0xff          
+1006 FF               86     CFG_BYTE_06:   DB  0xff          
+                      87             
+1007 FF               88     CFG_BYTE_07:   DB  0xff          
+1008 FF               89     CFG_BYTE_08:   DB  0xff          
+1009 FF               90     CFG_BYTE_09:   DB  0xff          
+                      91             
+100A FF               92     CFG_BYTE_0A:   DB  0xff          
+100B FF               93     CFG_BYTE_0B:   DB  0xff          
+100C FF               94     CFG_BYTE_0C:   DB  0xff          
+                      95             
+100D FF               96     CFG_BYTE_0D:   DB  0xff          
+100E FF               97     CFG_BYTE_0E:   DB  0xff          
+100F FF               98     CFG_BYTE_0F:   DB  0xff          
+                      99     END
+                                     
+A51 MACRO ASSEMBLER  FWVERSION                                                            11/11/2025 13:52:37 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+CFG_BYTE_00. . . .  C ADDR   1000H   A   
+CFG_BYTE_01. . . .  C ADDR   1001H   A   
+CFG_BYTE_02. . . .  C ADDR   1002H   A   
+CFG_BYTE_03. . . .  C ADDR   1003H   A   
+CFG_BYTE_04. . . .  C ADDR   1004H   A   
+CFG_BYTE_05. . . .  C ADDR   1005H   A   
+CFG_BYTE_06. . . .  C ADDR   1006H   A   
+CFG_BYTE_07. . . .  C ADDR   1007H   A   
+CFG_BYTE_08. . . .  C ADDR   1008H   A   
+CFG_BYTE_09. . . .  C ADDR   1009H   A   
+CFG_BYTE_0A. . . .  C ADDR   100AH   A   
+CFG_BYTE_0B. . . .  C ADDR   100BH   A   
+CFG_BYTE_0C. . . .  C ADDR   100CH   A   
+CFG_BYTE_0D. . . .  C ADDR   100DH   A   
+CFG_BYTE_0E. . . .  C ADDR   100EH   A   
+CFG_BYTE_0F. . . .  C ADDR   100FH   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

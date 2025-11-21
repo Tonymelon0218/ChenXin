@@ -1,0 +1,1414 @@
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODDPRX
+OBJECT MODULE PLACED IN .\Objects\ModDpRx.obj
+COMPILER INVOKED BY: D:\DevTools\Keil_5\Keil_v5\C51\BIN\C51.EXE ..\User\L1_Module\ModDpRx.c LARGE OBJECTADVANCED OPTIMIZ
+                    -E(11,SIZE) REGFILE(.\Objects\LT6911GXD_Pattern_MIPI_3D_NoBurst_4320x2160@90_25111103.ORC) BROWSE INCDIR(..\User\L0_App;.
+                    -.\User\L1_Module;..\User\L2_Drive;..\User\L3_Ocm) DEBUG PRINT(.\Listings\ModDpRx.lst) OBJECT(.\Objects\ModDpRx.obj)
+
+line level    source
+
+   1          /******************************************************************************
+   2            * @project: LT2101
+   3            * @file: ChipDpRx.c
+   4            * @author: qihan
+   5            * @company: LONTIUM
+   6            * @date: 2021.10.12
+   7          /******************************************************************************/
+   8          #include "include.h"
+   9          
+  10          #if RX_PORT_SIGN == DP_PORT
+  11          
+  12          #define DPRX_MSAMODE    BKF3_05_REG
+  13          #define DPRX_HTOTAL_H8    BKF3_06_REG
+  14          #define DPRX_HTOTAL_L8    BKF3_07_REG
+  15          
+  16          #define PPS_VERSION          BKEE_00_REG
+  17          #define PPS_COLORDEPTH       BKEE_03_REG
+  18          #define PPS_INFOLOAD         BKEE_AD_REG
+  19          StructDpRx g_stDpRx;
+  20          
+  21          void Mod_DpRx_PowerOnInit(void)
+  22          {
+  23   1          memset(&g_stDpRx,0,sizeof(StructDpRx));
+  24   1          g_stDpRx.ucRxState = STATE_DPRX_POWER_ON_1;
+  25   1      }
+  26          
+  27          void Mod_DpRx_GpioInit(void)
+  28          {
+  29   1          #if CHIP_SEL == LT8711GXE
+                  LT8711GXE_CCGpioInit();
+                  #endif
+  32   1          #if ((CHIP_SEL == LT7911UXE_DP)||(CHIP_SEL == LT6911GXD_DP))
+  33   1          LT7911GXE_CCGpioInit();
+  34   1          #endif
+  35   1      }
+  36          
+  37          void Mod_DpRx_DpOrTypecDet(void)
+  38          {
+  39   1          #if CHIP_SEL == LT8711GXE
+                  LT8711GXE_DpRxDpOrTypecDet();
+                  #endif
+  42   1          
+  43   1          #if ((CHIP_SEL == LT7911UXE_DP)||(CHIP_SEL == LT6911GXD_DP))
+  44   1          LT7911GXE_DpRxDpOrTypecDet();
+  45   1          #endif
+  46   1      }
+  47          
+  48          void Mod_DpRx_VarInit(void)
+  49          {
+  50   1          #if CHIP_SEL == LT8711GXE
+                  LT8711GXE_DpRxVarInit();
+                  #endif
+  53   1          #if ((CHIP_SEL == LT7911UXE_DP)||(CHIP_SEL == LT6911GXD_DP))
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 2   
+
+  54   1          LT7911GXE_DpRxVarInit();
+  55   1          #endif
+  56   1      }
+  57          
+  58          void Mod_DpRx_MsgNotify(u8 ucEvent)
+  59          {
+  60   1          #if CHIP_SEL == LT8711GXE
+                  LT8711GXE_DpRxMsgNotify(ucEvent);
+                  #endif
+  63   1          #if ((CHIP_SEL == LT7911UXE_DP)||(CHIP_SEL == LT6911GXD_DP))
+  64   1          LT7911GXE_DpRxMsgNotify(ucEvent);
+  65   1          #endif
+  66   1      }
+  67          
+  68          #if DPRX_LINK_CTS == ENABLED
+              u8 Mod_DpRx_UpStreamVidReadyGet()
+              {
+                  return g_stHdmiTx.b1UpstreamVideoReady;
+              }
+              #endif
+  74          
+  75          u8 Mod_DpRx_SourceDetection(void)
+  76          {
+  77   1          if(g_stDpRx.b1Input_Type_Sel == DP_INTF)
+  78   1          {
+  79   2              return Drv_DpRx_AuxDcDet();
+  80   2          }
+  81   1          #if TYPECRX_EN == ENABLED
+                  else if(g_stDpRx.b1Input_Type_Sel == TYPEC_INTF)
+                  {
+                      return Mod_CC1ComDone_Get();
+                  }
+                  #endif
+  87   1      
+  88   1          return FALSE;
+  89   1      }
+  90          
+  91          void Mod_DpRx_SourceChannelSet(void) 
+  92          {
+  93   1          if(g_stDpRx.b1Input_Type_Sel == DP_INTF)
+  94   1          {
+  95   2              Drv_DpRx_DpRxChlSwap();
+  96   2              Drv_DpRx_HpdSet(HPD_HIGH, IRQ_LOW);
+  97   2          }
+  98   1          #if TYPECRX_EN == ENABLED
+                  else
+                  {
+                      if(UCCStatus.b1UCcInput_type == MALE)
+                      {
+                          Drv_DpRx_TypecRxChlSwap(TYPEC_MALE,UCCStatus);
+                      }
+                      else
+                      {
+                           if(UCCStatus.b1IsFlip == FALSE)
+                           {
+                              Drv_DpRx_TypecRxChlSwap(TYPEC_FEMALE_NOFLIP,UCCStatus);
+                           }
+                           else
+                           {
+                              Drv_DpRx_TypecRxChlSwap(TYPEC_FEMALE_FLIP,UCCStatus);
+                           }
+                      }
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 3   
+
+                      UCCStatus.b2AttentionType = ATTENTION_HIGH;
+                  }
+                  #endif
+ 119   1      }
+ 120          
+ 121          void Mod_DpRx_PeakClkCal(void)
+ 122          {
+ 123   1          u8 ucBitDepth; 
+ 124   1          u8 b1IsDscSimple422 = FALSE;
+ 125   1          Drv_System_FmSet(TOP_FM,TOPFM_PCRPLL_PCR_CLK);
+ 126   1          Ocm_Delay1ms(3);//为什么要10ms？
+ 127   1          //get Pixel clock ,not Half one
+ 128   1          g_stDpRx.ulRxPixelClk = Drv_System_FmGet(TOP_FM,HALF_PIX_CLK)<<1;//Hlaf Pixel clock
+ 129   1      
+ 130   1          ucBitDepth = g_stDpRx.ucBitDepth;
+ 131   1          #if DPRX_DSC_DEC_SUPPORT == ENABLED
+                  if (Drv_DpRxDscDec_SwitchGet() == ENABLED)
+                  {
+                      switch(Drv_DpRxDscDec_ColorDepthGet())
+                      {
+                          case BPC10:
+                          case BPC12:
+                              ucBitDepth = DPRX_10BIT_2;
+                              break;        
+                          default:
+                              ucBitDepth = DPRX_8BIT_1;
+                              break;
+                      } 
+                      if(Drv_DpRxDscDec_ColorSpaceGet() == SIMPLE422_5)
+                      {
+                          b1IsDscSimple422 = TRUE;    
+                      }
+                  }
+                  #endif
+ 150   1          switch(ucBitDepth)
+ 151   1          {
+ 152   2              case DPRX_6BIT_0:
+ 153   2                  ucBitDepth = 6;
+ 154   2                  break;
+ 155   2              case DPRX_10BIT_2:
+ 156   2                  ucBitDepth = 10;
+ 157   2                  break;
+ 158   2              case DPRX_12BIT_3:
+ 159   2                  ucBitDepth = 12;
+ 160   2                  break;        
+ 161   2              default:
+ 162   2                  ucBitDepth = 8;
+ 163   2                  break;
+ 164   2          } 
+ 165   1          //not support 16bit
+ 166   1          //for HDMI output,get TMDS Clock
+ 167   1          g_stDpRx.ulRxPeakClk = (g_stDpRx.ulRxPixelClk*ucBitDepth)>>3;
+ 168   1          //
+ 169   1          if((g_stDpRx.ucPixelEncoding == YCbCr422_1)&&(b1IsDscSimple422 == FALSE))
+ 170   1          {
+ 171   2              g_stDpRx.ulRxPeakClk = (g_stDpRx.ulRxPeakClk<<1)/3;
+ 172   2          }
+ 173   1          else
+ 174   1          {
+ 175   2              ;
+ 176   2          }
+ 177   1      }
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 4   
+
+ 178          
+ 179          #if DPRX_TIMING_HBE == ENABLED
+              u8 Chip_Timing_Check(LtTiming_S stRxTimingInfo)
+              {
+                  if((stRxTimingInfo.usHtol >= TIMING_HBE_HTOTAL_4k60Hz_MIN)&& (stRxTimingInfo.usHtol <= TIMING_HBE_HTOT
+             -AL_4k60Hz_MAX))
+                  {
+                      return HBE_4K60;
+                  }    
+                  else if((stRxTimingInfo.usHtol >= TIMING_HBE_HTOTAL_4k50Hz_MIN)&& (stRxTimingInfo.usHtol <= TIMING_HBE
+             -_HTOTAL_4k50Hz_MAX))
+                  {
+                      return HBE_4K50;
+                  }
+                  return HBE_NONE;
+              }
+              u8 Chip_DpRx_JudgeTimingHBE(void)
+              {
+                  LtTiming_S  stRxTimingInfo; 
+                  //get MSA info from SDP register.
+                  Drv_DpRx_RxTimingGet(&stRxTimingInfo);
+              
+                  if ((Chip_Timing_Check(stRxTimingInfo) == HBE_4K60)
+                      && (stRxTimingInfo.usVtol == 2250)&& (stRxTimingInfo.usHact == 3840)&& (stRxTimingInfo.usVact == 2
+             -160))
+                  {
+                      g_stDpRx.b2IsTimingHBE = HBE_TYPE_UHD_60Hz;               
+                  }
+                  else if (((Chip_Timing_Check(stRxTimingInfo) == HBE_4K50)
+                      && (stRxTimingInfo.usVtol == 2250)&& ((stRxTimingInfo.usHact == 3840)||(stRxTimingInfo.usHact==409
+             -6))&&(stRxTimingInfo.usVact == 2160)))
+                  {
+                      if(stRxTimingInfo.usHact == 3840)
+                      {
+                          g_stDpRx.b2IsTimingHBE = HBE_TYPE_UHD_50Hz;
+                      }
+                      else if(stRxTimingInfo.usHact == 4096)
+                      {
+                          g_stDpRx.b2IsTimingHBE = HBE_TYPE_4K2K_50Hz;
+                      }
+                  }
+                  else 
+                  {      
+                      g_stDpRx.b2IsTimingHBE = HBE_NONE;
+                  }
+                  return g_stDpRx.b2IsTimingHBE;
+              }
+              
+              void Chip_DpRx_TimingHBE(void)
+              {
+                  u8 usTiming594M_H_Type1[8] = {0x11,0x30,0x01,0x7c,0x00,0x58,0x0F,0x00};
+                  u8 usTiming594M_H_Type2[8] = {0x14,0xA0,0x01,0x7C,0x00,0x58,0x0F,0x00};
+                  u8 usTiming594M_H_Type3[8] = {0x14,0xA0,0x00,0xD4,0x00,0x58,0x10,0x00};
+                  u8 usTiming594M_V[8] = {0x08,0xCA,0x00,0x52,0x00,0x0A,0x08,0x70};
+                  u8 ucTmpF30A;
+                  
+                  ucTmpF30A = BKF3_0A_REG & 0x80;
+                  if(g_stDpRx.b2IsTimingHBE==HBE_TYPE_UHD_60Hz)
+                  {
+                      memcpy(&BKF3_06_REG,&usTiming594M_H_Type1[0],8);
+                  }
+                  else if(g_stDpRx.b2IsTimingHBE==HBE_TYPE_UHD_50Hz)
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 5   
+
+                  {
+                      memcpy(&BKF3_06_REG,&usTiming594M_H_Type2[0],8);
+                  }
+                  else if(g_stDpRx.b2IsTimingHBE==HBE_TYPE_4K2K_50Hz)
+                  {
+                      memcpy(&BKF3_06_REG,&usTiming594M_H_Type3[0],8);
+                  }
+                  BKF3_0A_REG &= 0x7f; //clear bit0-7,default not 0
+                  BKF3_0A_REG |= ucTmpF30A;
+              
+                  memcpy(&BKF3_0E_REG, &usTiming594M_V[0], 8);    
+                  
+                  BKF3_05_REG |= BIT6_1; //soft msa enable
+                  BKF3_00_REG = 0x80;//如果8K HBE需要改成D0
+              }
+              #endif
+ 252          
+ 253          bool Mod_DpRx_PcrColorSpaceUpdate(void)
+ 254          {
+ 255   1      //    u8 ucPixelDepth;
+ 256   1          ColorInfo_S stColorInfo;
+ 257   1          Drv_DpRx_VidColorInfoGet(&stColorInfo);
+ 258   1          //no need updata.
+ 259   1          if ((g_stDpRx.ucPixelEncoding     == stColorInfo.ucPixelEncoding) &&
+ 260   1      //        (g_stDpRx.ucColorimetryFormat == stColorInfo.ucColorimetryFormat) &&
+ 261   1              (g_stDpRx.ucBitDepth          == stColorInfo.ucBitDepth) &&
+ 262   1              (g_stDpRx.b1VscPkg            == stColorInfo.b1VscPkg))
+ 263   1          {
+ 264   2              return FALSE;
+ 265   2          }
+ 266   1      
+ 267   1          //colorspace info need to be updata.
+ 268   1          g_stDpRx.b1VscPkg            = stColorInfo.b1VscPkg;
+ 269   1          g_stDpRx.ucPixelEncoding     = stColorInfo.ucPixelEncoding;//00 rgb 01 ycc422 10 ycc444 11 ycc420
+ 270   1          g_stDpRx.ucColorimetryFormat = stColorInfo.ucColorimetryFormat;
+ 271   1          g_stDpRx.ucBitDepth          = stColorInfo.ucBitDepth;     //1-8bit, 2-10bit, 3-12bit
+ 272   1      
+ 273   1          if(g_stDpRx.b1VscPkg == TRUE)
+ 274   1          {
+ 275   2              Drv_DpRx_420DetectMode(HARDWARE);
+ 276   2          }
+ 277   1          else
+ 278   1          {
+ 279   2              Drv_DpRx_420DetectMode(SOFTMODE);
+ 280   2          }
+ 281   1          #if DPRX_MST_MODE_EN == ENABLED
+                  if(g_stAuxStatus.b1MstFlag == TRUE)
+                  {
+                      BKF3_16_REG = 0x80|(BKF3_16_REG&0x1f);//[7:5]the value of lane_cnt in soft mode: 100'b-4lane
+                      BKF3_12_REG |= BIT7_1;//[7]rg_lane_cnt_soft_mode: 1-soft en, 0-soft dis
+                  }
+                  else
+                  {
+                      BKF3_16_REG &= 0x1f;//[7:5]the value of lane_cnt in soft mode: 100'b-4lane
+                      BKF3_12_REG &= BIT7_0;//[7]rg_lane_cnt_soft_mode: 1-soft en, 0-soft dis
+              
+                  }
+                  #endif
+ 294   1          return TRUE;
+ 295   1      }
+ 296          
+ 297          void Mod_DpRx_ColorimetryUpdata(void)
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 6   
+
+ 298          {
+ 299   1          ColorInfo_S stColorInfo;
+ 300   1          Drv_DpRx_VidColorInfoGet(&stColorInfo);
+ 301   1          //no need updata.
+ 302   1          if(g_stDpRx.ucColorimetryFormat == stColorInfo.ucColorimetryFormat)
+ 303   1          {
+ 304   2              return;
+ 305   2          }  
+ 306   1          //colorspace info need to be updata.
+ 307   1          g_stDpRx.ucColorimetryFormat = stColorInfo.ucColorimetryFormat;
+ 308   1          printLT(PRINT_PRIO_HIG, "\nColorimetry change = 0x%02bx",g_stDpRx.ucColorimetryFormat);
+ 309   1          Mod_DpRx_MsgNotify(DPRX_COLORRIMETRY_CHG_EVENT);
+ 310   1      }
+ 311          
+ 312          #if (DPRX_TIMING_HBE == ENABLED)
+              //========================================================================
+              // Func Name   : Mod_DpRx_JudgeTimingHBE
+              // Description : judge is not Horizontal Blanking Expansion
+              //                  v direction is same as 4k60 594M,vtotal is 2250,vactive is 2160
+              //                  H direction is not same, htotal is 3930~3940, hblank is 90~100,hactive is 3840
+              // Input       : void  
+              // Output      : None
+              // Return      : bool
+              //========================================================================
+              u8 Mod_DpRx_JudgeTimingHBE(void)
+              {
+                  return g_stDpRx.b2IsTimingHBE;
+              }
+              #endif
+ 327          
+ 328          bool Mod_DpRx_PcrMsaUpdate(void)
+ 329          {
+ 330   1          LtTiming_S stRxTimingInfo;
+ 331   1          if(Drv_System_IntFlagGet(IRQ_DPRX_MSA_INT) == FALSE)
+ 332   1          {
+ 333   2              return UNKNOWN;
+ 334   2          }
+ 335   1          Drv_DpRx_RxTimingGet(&stRxTimingInfo);
+ 336   1          if ((g_stDpRx.usHotal == stRxTimingInfo.usHtol) &&(g_stDpRx.usHactive == stRxTimingInfo.usHact))
+ 337   1          {
+ 338   2              return FALSE; //msa not chg
+ 339   2          }
+ 340   1          g_stDpRx.usHotal   = stRxTimingInfo.usHtol;
+ 341   1          g_stDpRx.usHactive = stRxTimingInfo.usHact;
+ 342   1          return TRUE;
+ 343   1      }
+ 344          
+ 345          void Mod_DpRx_InfoDisplay(void)
+ 346          {
+ 347   1          LtTiming_S stTiming;
+ 348   1          Drv_DpRx_RxTimingGet(&stTiming);
+ 349   1          
+ 350   1          printLT(PRINT_PRIO_HIG, "\nDpRxINFO:");
+ 351   1          printLT(PRINT_PRIO_TEST, "\nHbp    : %-8d  Vbp    : %-8d", stTiming.usHbp,stTiming.usVbp);
+ 352   1          printLT(PRINT_PRIO_TEST, "\nHfp    : %-8d  Vfp    : %-8d", stTiming.usHfp,stTiming.usVfp);
+ 353   1          printLT(PRINT_PRIO_TEST, "\nHsync  : %-8d  Vsync  : %-8d", stTiming.usHsync,stTiming.usVsync);
+ 354   1          printLT(PRINT_PRIO_TEST, "\nHact   : %-8d  Vact   : %-8d", stTiming.usHact,stTiming.usVact);
+ 355   1          printLT(PRINT_PRIO_TEST, "\nHtol   : %-8d  Vtol   : %-8d", stTiming.usHtol,stTiming.usVtol);
+ 356   1          printLT(PRINT_PRIO_TEST, "\nDepth  : %-8bd  Space  : %-8bd", (g_stDpRx.ucBitDepth << 1) + 6,g_stDpRx.u
+             -cPixelEncoding);
+ 357   1          printLT(PRINT_PRIO_TEST, "\nPixClk : %-8ld  PeakClk: %-8ld", g_stDpRx.ulRxPixelClk, g_stDpRx.ulRxPeakC
+             -lk);
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 7   
+
+ 358   1      }
+ 359          
+ 360          void Mod_DpRx_FrameRate_Get(LtTiming_S *pstRxTimingInfo)
+ 361          {
+ 362   1              u32 ulPixelClock;
+ 363   1              u16 usHcTotal = 0x00;
+ 364   1              //soft MSA，包括DSC BYpass，HBE模式等
+ 365   1              if(DPRX_MSAMODE & BIT6_1)//soft MSA
+ 366   1              {
+ 367   2                      usHcTotal = ((u16)DPRX_HTOTAL_H8<<8) + DPRX_HTOTAL_L8;
+ 368   2              }
+ 369   1              else
+ 370   1              {
+ 371   2                      usHcTotal = pstRxTimingInfo->usHtol;
+ 372   2              }
+ 373   1              ulPixelClock = (u32)usHcTotal * pstRxTimingInfo->usVtol;
+ 374   1      //      printLT(PRINT_PRIO_TEST, "\nulRxPixelClk = 0x%08lx", g_stDpRx.ulRxPixelClk);
+ 375   1      //      printLT(PRINT_PRIO_TEST, "\nulPixelClock = 0x%08lx", ulPixelClock);
+ 376   1      //if 420 mode and frame rate is EVEN, it is better Multiplication before division
+ 377   1              if(g_stDpRx.ucPixelEncoding == YCbCr420_3)//
+ 378   1              {
+ 379   2              //pstRxTimingInfo->usFramerate = (((g_stDpRx.ulRxPixelClk * 2000)+(ulPixelClock/2))/ulPixelClock);
+             -//四舍五入
+ 380   2                      pstRxTimingInfo->usFramerate = floor((((float)g_stDpRx.ulRxPixelClk * 2000)/ulPixelClock)+0.5);//四舍�
+             -��入
+ 381   2              }
+ 382   1              else
+ 383   1              {
+ 384   2              //pstRxTimingInfo->usFramerate = (((g_stDpRx.ulRxPixelClk * 1000)+ulPixelClock/2)/ulPixelClock);//
+             -四舍五入
+ 385   2                      pstRxTimingInfo->usFramerate = floor((((float)g_stDpRx.ulRxPixelClk * 1000)/ulPixelClock)+0.5);//四舍�
+             -��入
+ 386   2              }
+ 387   1              printLT(PRINT_PRIO_TEST, "\nRefreshRate = %d",pstRxTimingInfo->usFramerate);
+ 388   1      }
+ 389          
+ 390          void Mod_DpRx_HpdLowAction(void)
+ 391          {
+ 392   1          //pull hpd to low.
+ 393   1          if(g_stDpRx.b1Input_Type_Sel == DP_INTF)
+ 394   1          {
+ 395   2              Drv_DpRx_HpdSet(HPD_LOW, IRQ_LOW);
+ 396   2          }
+ 397   1          #if TYPECRX_EN == ENABLED
+                  else
+                  {
+                      UCCStatus.b2AttentionType = ATTENTION_LOW;
+                  }
+                  #endif
+ 403   1          
+ 404   1          #if DPRX_HDCP_DEC_MODE != NO_HDCP
+                  Drv_System_IntSet(IRQ_RXHDCP1X_INT,OFF);//
+                  Drv_System_IntSet(IRQ_RXHDCP2X_INT,OFF);//
+                  Drv_HdcpRx_StateClear();
+                  #endif
+ 409   1          
+ 410   1          Drv_DpRx_PhyShut();
+ 411   1          Drv_DpRx_Reset(DP_FEC_DEC_RST);
+ 412   1          Drv_DpRx_Reset(DP_MLC_DAT_RST);  //solve mst dpcd200c not clr issue 
+ 413   1          Drv_DpRx_Reset(DP_MLC_DPCD_RST); //solve 3080 mst dpcd not clr issue
+ 414   1          //DP_MLC_DAT_RST 后需要至少加2ms复位再关掉RXPHY
+ 415   1      //    Ocm_Delay1ms(10);
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 8   
+
+ 416   1          g_stDpRx.ucHdcpVersion = NO_HDCP;
+ 417   1          Mod_DpRx_MsgNotify(DPRX_HDCP_VER_CHG_EVENT);
+ 418   1          Mod_DpRx_MsgNotify(DPRX_VIDEO_OFF_EVENT);
+ 419   1      }
+ 420          
+ 421          void Mod_DpRx_HpdIrq(void)
+ 422          {
+ 423   1          if(g_stDpRx.b1Input_Type_Sel == DP_INTF)
+ 424   1          {
+ 425   2              Drv_DpRx_HpdSet(HPD_HIGH, IRQ_HIGH);
+ 426   2          }
+ 427   1          #if TYPECRX_EN == ENABLED
+                  else
+                  {
+                      UCCStatus.b2AttentionType = ATTENTION_IRQ;
+                  }
+                  #endif
+ 433   1      }
+ 434          #if DPRX_MST_MODE_EN == ENABLED
+              void Mod_DpRx_MstHandler(void)
+              {
+                  if(g_stDpRx.ucRxState > STATE_DPRX_SET_HPD_5)
+                  {
+                      Mod_Mst_MsgHandle();
+                  }
+              }
+              #endif
+ 443          u8 Mod_DpRx_ColorSpace(void)
+ 444          {
+ 445   1          return g_stDpRx.ucPixelEncoding;
+ 446   1      }
+ 447          
+ 448          u8 Mod_DpRx_ColorDepth(void)
+ 449          {
+ 450   1          return g_stDpRx.ucBitDepth;
+ 451   1      }
+ 452          
+ 453          void Mod_DpRx_SetState(u8 ucState)
+ 454          {
+ 455   1          u8 ucLastState;
+ 456   1          if(ucState != g_stDpRx.ucRxState)
+ 457   1          {    
+ 458   2              ucLastState = g_stDpRx.ucRxState;
+ 459   2              g_stDpRx.ucRxState = ucState;
+ 460   2              g_stDpRx.b1RxStateChanged = TRUE;
+ 461   2              printLT(PRINT_PRIO_TEST, "\nRxState = %bd",ucState);
+ 462   2              
+ 463   2              // other state-->STATE_DPRX_PLAY_BACK_16,need notify video on
+ 464   2              if(g_stDpRx.ucRxState == STATE_DPRX_PLAY_BACK_16)
+ 465   2              {
+ 466   3                  Mod_DpRx_MsgNotify(DPRX_VIDEO_ON_EVENT);
+ 467   3              }
+ 468   2              
+ 469   2              //STATE_DPRX_PLAY_BACK_16-->other state,need notify video off
+ 470   2              if(ucLastState == STATE_DPRX_PLAY_BACK_16)
+ 471   2              {
+ 472   3                  Mod_DpRx_MsgNotify(DPRX_VIDEO_OFF_EVENT);
+ 473   3              }
+ 474   2          }
+ 475   1      }
+ 476          
+ 477          //========================================================================
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 9   
+
+ 478          // Func Name   : Mod_DpRx_SourceDetProc
+ 479          // Description : The process of source detection.
+ 480          // Input       : void  
+ 481          // Output      : None
+ 482          // Return      : void
+ 483          //========================================================================
+ 484          void Mod_DpRx_SourceDetProc(void)
+ 485          {
+ 486   1          if(g_stDpRx.ucRxState < STATE_DPRX_WAIT_SOURCE_3)
+ 487   1          {
+ 488   2              return;
+ 489   2          }
+ 490   1          //the last source detect is high.
+ 491   1          if(g_stDpRx.b1SourceDet == HIGH)
+ 492   1          {
+ 493   2              //the current source detect is low.
+ 494   2              if(Mod_DpRx_SourceDetection() == FALSE)
+ 495   2              {
+ 496   3                  printLT(PRINT_PRIO_HIG, "\nDpRx Unplug");
+ 497   3                  Mod_DpRx_SetState(STATE_DPRX_WAIT_SOURCE_3); //Typec Rx CC is done or dp is ok cc is open 09  
+             -         
+ 498   3                  Mod_DpRx_HpdLowAction();
+ 499   3                  g_stDpRx.b1SourceDet = LOW;
+ 500   3                  Mod_DpRx_MsgNotify(DPRX_SOURECE_UNPLUG_EVENT);
+ 501   3              }
+ 502   2      
+ 503   2          }
+ 504   1          //the last source detect is low.
+ 505   1          else
+ 506   1          {
+ 507   2              //the current source detect is high.
+ 508   2              if(Mod_DpRx_SourceDetection() == TRUE)
+ 509   2              {
+ 510   3                  printLT(PRINT_PRIO_HIG, "\nRx Plug");
+ 511   3                  g_stDpRx.b1SourceDet = HIGH; 
+ 512   3                  Mod_DpRx_MsgNotify(DPRX_SOURECE_PLUG_EVENT);
+ 513   3              }
+ 514   2          }
+ 515   1      }
+ 516          
+ 517          void Mod_DpRx_EccErrAbnormalHdl(u8 ucOpt)
+ 518          {
+ 519   1          static u8 ucCount = 0;
+ 520   1      
+ 521   1          if (ucOpt == DISABLED)
+ 522   1          {
+ 523   2              ucCount = 0;
+ 524   2              return;
+ 525   2          }
+ 526   1      
+ 527   1          if(ucCount >= 0x05)//1s
+ 528   1          {
+ 529   2              ucCount++;
+ 530   2              if((Drv_DpRx_NoErrCheck(g_stAuxStatus.ucLink_Count) == TRUE)&&(g_stAuxStatus.FecFlag == TRUE))
+ 531   2              {
+ 532   3                  printLT(PRINT_PRIO_HIG, "\nWait ECC");
+ 533   3                  #if CHIP_VERSION_SEL == U1_VERSION
+                          Drv_DpRx_FecSoftModeSet(TRUE);//Softmode
+                          #else
+ 536   3                  //maximum wait time equal ((512*256)/810M)*2 = 324us
+ 537   3                  Drv_DpRx_FecAbnormalDet();
+ 538   3                  #endif
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 10  
+
+ 539   3              }
+ 540   2              else
+ 541   2              {
+ 542   3                  Drv_DpcdError_Clear(0x0f);
+ 543   3              }
+ 544   2          }
+ 545   1          else
+ 546   1          {
+ 547   2              ucCount++;
+ 548   2              Drv_DpRx_Reset(DP_RX_SDP_RST);
+ 549   2              printLT(PRINT_PRIO_HIG, "\nEcc err");
+ 550   2          }
+ 551   1      }
+ 552          #if ((DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPASS_SUPPORT == ENABLED))
+              u8 Mod_DpRx_DecByp_Sel(void)
+              {
+                  u32 ulFrequency = 0x00;
+                  u8 ucBitDepth = 0x00;
+                  u8 ucColorDepth = 0x00;
+                  u8 ucSliceNum = 0;
+              //    g_stDpRx.ucDscSel = SELNODSC;
+                  #if (DPRX_DSC_DEC_SUPPORT == ENABLED)
+                  Drv_DpRxDscDec_Set(DISABLED);
+                  #endif
+                  #if (DPRX_DSC_BYPASS_SUPPORT == ENABLED)
+                  Drv_DpRxDscBy_Set(DISABLED);
+                  #endif
+                  if(Drv_DpRx_PixelStableCheck() == TRUE)//Frequency Stable
+                  {
+                      //load pps to sram and get color depth
+                      Ocm_Delay1us(10);//must be wait load success
+                      PPS_INFOLOAD = 0xff;//important, ee00 ~ ee80 update, must be set
+                      Ocm_Delay1ms(1);
+                      if ((PPS_VERSION >= 0x11) && (PPS_VERSION <= 0x13))
+                      {
+                          printLT(PRINT_PRIO_HIG, "\nPPs LOAD SUCCEED");
+                      }
+                      else
+                      {
+                          return 0x00;//wait
+                      }
+                  //color space and depth get
+                      ucColorDepth = (PPS_COLORDEPTH >> 5);//8 bit = 0x04, so >> 4 and /2，is >> 5      
+                      switch(ucColorDepth)
+                      {
+                          case BPC10:
+                              ucBitDepth = 10;
+                              break;
+                          case BPC12:
+                              ucBitDepth = 12;
+                              break;        
+                          default:
+                              ucBitDepth = 8;
+                              break;
+                      }
+                      ulFrequency = Drv_DpRx_PixFreqGet();
+                      ulFrequency = (ulFrequency*ucBitDepth)/4;// 4 = 8/2
+                      ucSliceNum = Drv_DpRxDsc_SliceNum();
+                      if (ucSliceNum > 4)
+                      {
+                          printLT(PRINT_PRIO_HIG, "\nSlice >  4");
+                          #if (DPRX_DSC_BYPASS_SUPPORT == ENABLED)
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 11  
+
+                          Drv_DpRxDscBy_Set(ENABLED);
+                          #endif
+                          return 0x01;//DSC Judge Done
+                      }
+                      
+                      if ((ulFrequency > Mod_HdmiTx_LinkBandWidthGet())&&(g_stHdmiEdidInfo.ucMaxFrlDscRate != FRL_NOT_SP
+             -T))
+                      {
+                          #if (DPRX_DSC_BYPASS_SUPPORT == ENABLED)
+                          Drv_DpRxDscBy_Set(ENABLED);
+                          #endif
+                      }
+                      else
+                      {
+                          #if (DPRX_DSC_DEC_SUPPORT == ENABLED)
+                          Drv_DpRxDscDec_Set(ENABLED);
+                          #endif
+                      }
+                      printLT(PRINT_PRIO_TEST, "\nPixelClock = 0x%08lx, 0x%08lx", ulFrequency,Mod_HdmiTx_LinkBandWidthGe
+             -t());
+                      return 0x01;//DSC Judge Done
+                  }
+                  else
+                  {
+                      return 0x00;//wait
+                  }
+              }
+              #endif
+ 627          void Mod_DpRx_StateJudge(void)
+ 628          {
+ 629   1          u8 ucMinState = 0xff;
+ 630   1          #if DPRX_HDCP_DEC_MODE != NO_HDCP
+                  u8 ucHdpcVer;
+                  #endif
+ 633   1          #if ((DPRX_LINK_CTS == ENABLED) && (DPRX_DSC_DEC_SUPPORT == ENABLED))
+                  u8 ucHpdIrqCnt;
+                  #endif
+ 636   1          
+ 637   1          //source detect low, no need judge
+ 638   1          if(g_stDpRx.b1SourceDet == LOW)
+ 639   1          {
+ 640   2              return;
+ 641   2          }
+ 642   1          
+ 643   1          //monitor down stream is present or not.
+ 644   1          if(g_stDpRx.ucRxState > STATE_DPRX_DOWNSTREAM_READY_4) 
+ 645   1          {
+ 646   2              if(g_stDpRx.b1DownstreamDeviceReady == FALSE)
+ 647   2              {
+ 648   3                  Mod_DpRx_HpdLowAction(); //pull low hpd.
+ 649   3                  ucMinState = MIN(ucMinState,STATE_DPRX_DOWNSTREAM_READY_4);
+ 650   3              }
+ 651   2          }
+ 652   1          
+ 653   1          //monitor re-training event.
+ 654   1          if(g_stDpRx.ucRxState > STATE_DPRX_WAIT_LINK_TRAIN_6)
+ 655   1          {
+ 656   2              if(Mod_Aux_GetRetrainStatus() == TRUE)//re training
+ 657   2              {
+ 658   3                  printLT(PRINT_PRIO_HIG, "\nRx re-training");
+ 659   3                  Mod_DpRx_SetState(STATE_DPRX_WAIT_LINK_TRAIN_6);
+ 660   3              }
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 12  
+
+ 661   2              #if (DPRX_HDCP_DEC_MODE != NO_HDCP)   
+                      if((Drv_Hdcp13_IntGet() == TRUE)||(Drv_Hdcp2X_IntGet() == TRUE))
+                      {
+                          printLT(PRINT_PRIO_HIG, "\nHDCP INT");
+                          Mod_DpRx_HpdIrq();
+                      }
+                      #endif
+ 668   2          }
+ 669   1          
+ 670   1          #if DPRX_MST_MODE_EN == ENABLED
+                  if(g_stDpRx.ucRxState > STATE_DPRX_WAIT_MST_DONE_7)
+                  {
+                      if(Mod_DpRxMst_PayloadUpdate() == TRUE)
+                      {
+                          printLT(PRINT_PRIO_HIG, "\nPayload update");
+                          ucMinState = MIN(ucMinState, STATE_DPRX_WAIT_MST_DONE_7);//STATE_DPRX_WAIT_MST_DONE_7;
+                      }
+                  }
+                  #endif
+ 680   1      
+ 681   1          //monitor fec det
+ 682   1          #if ((DPRX_FEC_SUPPORT == ENABLED)||(DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPASS_SUPPORT == ENA
+             -BLED))
+                  if(g_stDpRx.ucRxState > STATE_DPRX_DESKEW_CHECK_9)
+                  {
+                      if (Drv_DpRx_FecDecDet() == TRUE)
+                      {
+                          Drv_DpRx_FecDataPathSet(ENABLED);
+                          Drv_DpRx_Reset(DP_FEC_DEC_RST);
+                      }
+                      else if(Drv_DpRx_FecDecDet() == FALSE)
+                      {
+                          Drv_DpRx_FecDataPathSet(DISABLED);
+                      }
+                  }
+                  #endif
+ 696   1          if(g_stDpRx.ucRxState == STATE_DPRX_DEPACKET_CHECK_10)
+ 697   1          {
+ 698   2              if((Drv_DpRx_DeSkewCheck() == FAIL)&&(g_stAuxStatus.ucLink_Count > ONE_LANE))
+ 699   2              {
+ 700   3                  printLT(PRINT_PRIO_HIG, "\nSKew Unlock");
+ 701   3                  ucMinState = MIN(ucMinState, STATE_DPRX_DESKEW_CHECK_9);//-wangtt- wait confirm
+ 702   3              }
+ 703   2          }
+ 704   1          //monitor MSA changes event and updata MSA info.
+ 705   1          if(g_stDpRx.ucRxState > STATE_DPRX_MSA_CHECK_11)
+ 706   1          {
+ 707   2              //monitor color space changes event and updata color space info.
+ 708   2              if (Mod_DpRx_PcrColorSpaceUpdate() == TRUE)
+ 709   2              {
+ 710   3                  printLT(PRINT_PRIO_HIG, "\nColor space change");
+ 711   3                  ucMinState = MIN(ucMinState, STATE_DPRX_DEPACKET_CHECK_10);//-wangtt- wait confirm
+ 712   3              }
+ 713   2              if(Mod_DpRx_PcrMsaUpdate() == TRUE)
+ 714   2              {
+ 715   3                  printLT(PRINT_PRIO_HIG, "\nMsa change");
+ 716   3                  ucMinState = MIN(ucMinState,STATE_DPRX_DEPACKET_CHECK_10);
+ 717   3              }
+ 718   2                      if(g_stDpRx.b1CompressedStream != Drv_DpRx_DscDecState())
+ 719   2                      {
+ 720   3                              printLT(PRINT_PRIO_HIG, "\nDSC CHNG");
+ 721   3                  ucMinState = MIN(ucMinState, STATE_DPRX_DEPACKET_CHECK_10);
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 13  
+
+ 722   3                      }
+ 723   2          }
+ 724   1          #if ((DPRX_LINK_CTS == ENABLED) && (DPRX_DSC_DEC_SUPPORT == ENABLED))
+                  if(g_stDpRx.ucRxState > STATE_DPRX_PPS_CHECK_12)
+                  {
+                      //slove StemDeck PPS issue,just send PPS packet for a while
+                      if(Drv_System_IntFlagGet(IRQ_DPRX_PPS_DATA_CHG_INT) == TRUE)
+                      {
+                          Drv_System_IntClr(IRQ_DPRX_PPS_DATA_CHG_INT);
+                          if(Drv_DpRxDscDec_DscParaCheck() == FALSE)
+                          {
+                              if(ucHpdIrqCnt == 0)
+                              {
+                                  Mod_DpRx_HpdIrq();
+                                  ucHpdIrqCnt++;
+                              }
+                          }
+                          else
+                          {
+                              ucHpdIrqCnt = 0;
+                          }
+                      }
+                  }
+                  #endif
+ 746   1      
+ 747   1          //monitor PCR unstable event, just for debug
+ 748   1          if(g_stDpRx.ucRxState > STATE_DPRX_PCR_CONFIG_13)
+ 749   1          {
+ 750   2              if ((Drv_DpRx_PcrStableCheck() == UNSTABLE)||(DRV_DpRx_VideoStreamFlag() == FALSE))
+ 751   2              {
+ 752   3                  printLT(PRINT_PRIO_HIG, "\nGoto PCR");
+ 753   3                  ucMinState = MIN(ucMinState, STATE_DPRX_DEPACKET_CHECK_10);
+ 754   3              }
+ 755   2          }
+ 756   1          
+ 757   1          //monitor hdcp verison change
+ 758   1          #if DPRX_HDCP_DEC_MODE != NO_HDCP
+                  if (g_stDpRx.ucRxState > STATE_DPRX_HDCP_VER_CHK_14)
+                  {
+                      ucHdpcVer = Drv_HdcpRx_VerGet();
+                      if (g_stDpRx.ucHdcpVersion != ucHdpcVer)
+                      {
+                          g_stDpRx.ucHdcpVersion = ucHdpcVer;
+                          printLT(PRINT_PRIO_TEST, "\nHcdp upate");
+                          Mod_DpRx_MsgNotify(DPRX_HDCP_VER_CHG_EVENT);
+                      }
+                  }
+                  #endif
+ 770   1      
+ 771   1          //monitor audio 8 channel
+ 772   1          if(g_stDpRx.ucRxState > STATE_DPRX_AUDIO_INFO_CHK_15)
+ 773   1          {
+ 774   2              Drv_DpRx_AudioFormatSet();
+ 775   2      //        if ((Drv_Audio_AcrMute() == FALSE) && (Mod_DpRx_AudioChannelUpdata() == TRUE))
+ 776   2                      if(Drv_Audio_FsValStbCheck() == TRUE)
+ 777   2              {       
+ 778   3                              Drv_AudioSdm_SwEn();
+ 779   3                  printLT(PRINT_PRIO_TEST, "\nAudio chg");
+ 780   3                  Mod_DpRx_MsgNotify(DPRX_AUDIO_CHG_EVENT);
+ 781   3              }
+ 782   2              #if DPRX_CDR_MODE == ANACDR
+ 783   2              if(Drv_DpRxPll_LockGet() == FALSE)
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 14  
+
+ 784   2              {
+ 785   3                  printLT(PRINT_PRIO_TEST, "\nACDR Unlock");
+ 786   3                  ucMinState = MIN(ucMinState, STATE_DPRX_DESKEW_CHECK_9);
+ 787   3              }
+ 788   2              #endif
+ 789   2              #if DPRX_DSC_DEC_SUPPORT == ENABLED
+                      if((g_stDpRx.ucDscFifoEmpty | g_stDpRx.ucDscFifoEmpty) == 0x00)
+                      {
+                          if((g_stDpRx.ucDscFifoEmpty != Drv_DpRx_DscFifoEmptyGet())||(g_stDpRx.ucDscFifoFull != Drv_DpR
+             -x_DscFifoFullGet()))
+                          {
+                              Drv_DpRxDscDec_Rst();
+                              printLT(PRINT_PRIO_TEST, "\nDSCFIFO ERR");
+                              
+              //                ucMinState = MIN(ucMinState, STATE_DPRX_DESKEW_CHECK_9);
+                          }
+                      }  
+                      #endif
+ 801   2          }
+ 802   1          //monitor hdr
+ 803   1          if((g_stDpRx.ucRxState >= STATE_DPRX_PLAY_BACK_16)&&(ucMinState >= STATE_DPRX_PLAY_BACK_16))    
+ 804   1          {
+ 805   2              // monitor dobly hdr
+ 806   2              if((Drv_System_IntFlagGet(IRQ_DPRX_VSI_INT) == TRUE))
+ 807   2              {
+ 808   3                  Drv_System_IntClr(IRQ_DPRX_VSI_INT);
+ 809   3                  g_stDpRx.b1HdrEn = ENABLED;
+ 810   3                  Mod_DpRx_MsgNotify(DPRX_DOBLY_HDR_NOTIFY_EVENT);
+ 811   3              }
+ 812   2              //monitor static HDR
+ 813   2              if(Drv_System_IntFlagGet(IRQ_DPRX_STATICHDR_INT) == TRUE)
+ 814   2              {
+ 815   3                  Drv_System_IntClr(IRQ_DPRX_STATICHDR_INT);
+ 816   3                  g_stDpRx.b1HdrEn = ENABLED;
+ 817   3                  Mod_DpRx_MsgNotify(DPRX_STATIC_HDR_NOTIFY_EVENT);
+ 818   3              }
+ 819   2              //monitor dynamic HDR
+ 820   2              if(Drv_System_IntFlagGet(IRQ_DPRX_DYNAMICHDR_INT) == TRUE)
+ 821   2              {
+ 822   3                  Drv_System_IntClr(IRQ_DPRX_DYNAMICHDR_INT);
+ 823   3                  g_stDpRx.b1HdrEn = ENABLED;
+ 824   3                  Mod_DpRx_MsgNotify(DPRX_DYNAMIC_HDR_NOTIFY_EVENT);
+ 825   3              }
+ 826   2              //adapter sync
+ 827   2              #if DPRX_ADAPTIVE_SYNC == ENABLED
+                      if(Drv_System_IntFlagGet(IRQ_DPRX_ADAPTIVE_SYNC_INT) == TRUE)
+                      {
+                          Drv_System_IntClr(IRQ_DPRX_ADAPTIVE_SYNC_INT);
+                          g_stAuxStatus.ucMsaIgnoreEn = ENABLED;
+                          g_stDpRx.b1AdaptiveSyncEn = ENABLED;
+                          Mod_DpRx_MsgNotify(DPRX_VRR_NOTIFY_EVENT);
+                      }
+                      else if(g_stAuxStatus.ucMsaIgnoreEn&BIT7_1)//DPCD Write 107
+                      {
+                          g_stAuxStatus.ucMsaIgnoreEn &= BIT7_0;//clear
+                          g_stDpRx.b1AdaptiveSyncEn = (g_stAuxStatus.ucMsaIgnoreEn&BIT7_0);
+                          Mod_DpRx_MsgNotify(DPRX_VRR_NOTIFY_EVENT);
+                      }    
+                      #endif
+ 842   2          }    
+ 843   1          if (ucMinState != 0xff)
+ 844   1          {
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 15  
+
+ 845   2              Mod_DpRx_SetState(ucMinState); 
+ 846   2          }
+ 847   1      }
+ 848          
+ 849          void Mod_DpRx_StateHandler(void)
+ 850          {
+ 851   1          static u32 ulCurrentTime = 0;
+ 852   1          #if ((DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPASS_SUPPORT == ENABLED))
+                      static u8 b1DscPpsDone = NOT_SUPPORT;
+                  static u8 ucTryToLoadPPS = 0x00;
+                  #endif
+ 856   1          static u8 ucWaitPcrStableCnt;
+ 857   1      //    static u8 ucDscSelect = 0x00;
+ 858   1          switch(g_stDpRx.ucRxState)
+ 859   1          {
+ 860   2              case STATE_DPRX_POWER_ON_1:
+ 861   2                  Mod_DpRx_GpioInit();
+ 862   2                  #if TYPECRX_EN == ENABLED
+                          DRV_CCPHY_DigSet();
+                          #endif
+ 865   2                  Drv_DpRx_PowerOnInit();
+ 866   2                  Drv_DpRx_PhyShut();//close Rterm for USB3.0 Switch use
+ 867   2                  Mod_DpRx_SetState(STATE_DPRX_INPUT_TYPE_DET_2);
+ 868   2                  break;
+ 869   2      
+ 870   2              case STATE_DPRX_INPUT_TYPE_DET_2:
+ 871   2                  if(g_stDpRx.b1RxStateChanged == TRUE)
+ 872   2                  {
+ 873   3                      Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+ 874   3                      g_stDpRx.b1RxStateChanged = FALSE;
+ 875   3                  }
+ 876   2                  if(Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_10) == TRUE)
+ 877   2                  {
+ 878   3                      Mod_DpRx_DpOrTypecDet();
+ 879   3                      Mod_DpRx_SetState(STATE_DPRX_WAIT_SOURCE_3);
+ 880   3                  }
+ 881   2                  break;
+ 882   2      
+ 883   2              case STATE_DPRX_WAIT_SOURCE_3:
+ 884   2                  if(g_stDpRx.b1SourceDet == HIGH)
+ 885   2                  {
+ 886   3                      Mod_DpRx_SetState(STATE_DPRX_DOWNSTREAM_READY_4);
+ 887   3                  }
+ 888   2                  break;
+ 889   2      
+ 890   2              case STATE_DPRX_DOWNSTREAM_READY_4:
+ 891   2                  if (g_stDpRx.b1DownstreamDeviceReady == TRUE) //hdmi tx edid read OK
+ 892   2                  {
+ 893   3                      Mod_DpRx_SetState(STATE_DPRX_SET_HPD_5);
+ 894   3                  }
+ 895   2                  break;
+ 896   2      
+ 897   2              case STATE_DPRX_SET_HPD_5:
+ 898   2                   if(g_stDpRx.b1RxStateChanged == TRUE)
+ 899   2                   {              
+ 900   3                       Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+ 901   3                       Drv_Sys_ChipRxSrcSel(CHIPRX_SRC_SEL_DPRX);
+ 902   3                       g_stDpRx.b1RxStateChanged = FALSE;
+ 903   3                   }
+ 904   2                   if(Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_300) == TRUE)
+ 905   2                   {
+ 906   3                      Mod_DpRx_VarInit();
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 16  
+
+ 907   3                      Drv_DpRx_SettingInit();
+ 908   3                                      #if ((DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPASS_SUPPORT == ENABLED))
+                               //to clear DSC abnormal handle logic
+                              g_stDpRx.b1DscAbnormal = FALSE;
+                                              #endif
+ 912   3                      Mod_DpRx_SourceChannelSet();
+ 913   3                      Mod_DpRx_SetState(STATE_DPRX_WAIT_LINK_TRAIN_6);
+ 914   3                      Drv_System_IntClr(IRQ_DPRX_PPS_PKT_INT);
+ 915   3                      Drv_System_IntSet(IRQ_DPRX_PPS_PKT_INT,ON);
+ 916   3                   }
+ 917   2                   break;
+ 918   2      
+ 919   2              case STATE_DPRX_WAIT_LINK_TRAIN_6://06
+ 920   2                  if(Mod_Aux_GetTrainDoneStatus() == TRUE)//rx trainig done
+ 921   2                  {              
+ 922   3                      #if DPRX_LINK_CTS == ENABLED //solution for DPRX link CTS.//5.3.2.1 IRQ HPD Pulse Due to L
+             -oss of Symbol Lock and Clock Recovery Lock 
+                              if(g_stDpRx.b1RxStateChanged == TRUE)
+                              {
+                                  Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+                                  Drv_DpcdError_Clear(0x0F);
+                                  g_stDpRx.b1RxStateChanged = FALSE;
+                              }
+              
+                              if(Mod_DpRx_8b10bErrorChk() == TRUE)
+                              {
+                                  printLT(PRINT_PRIO_HIG, "\nloss lock");
+                                  Mod_Aux_DealLossLock();
+                                  Mod_DpRx_HpdIrq();
+                                  #if ((DPRX_FEC_SUPPORT == ENABLED)||(DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPAS
+             -S_SUPPORT == ENABLED))
+                                  Drv_DpRx_FecSoftModeSet(FALSE);
+                                  #endif
+                              }
+                              #endif
+ 940   3                      if(Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_20) == TRUE)
+ 941   3                      {
+ 942   4                          #if DPRX_MST_MODE_EN == ENABLED
+                                  if(g_stAuxStatus.b1MstFlag == 1)  
+                                  {
+                                      Mod_DpRx_SetState(STATE_DPRX_WAIT_MST_DONE_7);
+                                  }
+                                  else
+                                  #endif
+ 949   4                          {
+ 950   5                              
+ 951   5                              Mod_DpRx_SetState(STATE_DPRX_EQ_FINE_TUNE_8);
+ 952   5                          }
+ 953   4                      }
+ 954   3                  }
+ 955   2                  break;
+ 956   2      
+ 957   2              #if DPRX_MST_MODE_EN == ENABLED        
+                      case STATE_DPRX_WAIT_MST_DONE_7:
+                          if(g_stDpRx.b1RxStateChanged == TRUE)//26 bytes
+                          {
+                              Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+                              g_stDpRx.b1RxStateChanged    = FALSE;
+                          }
+                          if (g_stAuxStatus.b1MstFlag == 1)
+                          {
+                              if((g_stMstRxStatus.request_flag == 1)||(g_stMstRxStatus.payload_flag == 0)||(Mod_DpRxMst_
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 17  
+
+             -PayloadDone() == TRUE))
+                              {
+                                  Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+                                  g_stMstRxStatus.request_flag = 0;
+                                  g_stMstRxStatus.payload_done_flag = 0;
+                              }
+                              if((Ocm_Timer_IsOverFlow(&ulCurrentTime,MS_400) == TRUE))
+                              {
+                                  #if ((DPRX_FEC_SUPPORT == ENABLED)||(DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPAS
+             -S_SUPPORT == ENABLED))
+                                  Drv_DpRx_FecSoftModeSet(g_stAuxStatus.FecFlag);
+                                  #endif
+                                  Mod_DpRx_SetState(STATE_DPRX_EQ_FINE_TUNE_8);
+                              }
+                          }
+                          break;
+                      #endif
+ 982   2      
+ 983   2              case STATE_DPRX_EQ_FINE_TUNE_8:
+ 984   2                  if(g_stDpRx.b1RxStateChanged == TRUE)
+ 985   2                  {
+ 986   3      //                Drv_DpcdError_Clear(0x0F);
+ 987   3                      #if ((DPRX_FEC_SUPPORT == ENABLED)||(DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPASS_SU
+             -PPORT == ENABLED))
+                              Drv_DpRx_FecDataPathSet(DISABLED);
+                              #endif
+ 990   3                      g_stDpRx.b1RxStateChanged = FALSE;
+ 991   3                      Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+ 992   3                      printLT(PRINT_PRIO_TEST, "\nRATE_LANE = 0x%02bx,0x%02bx",g_stAuxStatus.ucLink_Rate, g_stAu
+             -xStatus.ucLink_Count);
+ 993   3                  }
+ 994   2                  if((Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_800) == TRUE)||(DRV_DpRx_VideoStreamFlag()== TRUE)
+             -)
+ 995   2                  {
+ 996   3                      Mod_DpRx_EqSet();
+ 997   3                      Mod_DpRx_SetState(STATE_DPRX_DESKEW_CHECK_9);
+ 998   3                  }
+ 999   2                  break;
+1000   2      
+1001   2              case STATE_DPRX_DESKEW_CHECK_9:
+1002   2                  if(g_stDpRx.b1RxStateChanged == TRUE)
+1003   2                  {
+1004   3                      g_stDpRx.b1RxStateChanged = FALSE;
+1005   3                      Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+1006   3                  }
+1007   2                  if(Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_100) == TRUE)
+1008   2                  {
+1009   3                      //one lane has no skew issue
+1010   3                      //if((Drv_DpRx_DeSkewCheck() == FAIL)&&(g_stAuxStatus.ucLink_Count > ONE_LANE))
+1011   3                      if(Drv_DpRx_DeSkewCheck() == FAIL)
+1012   3                      {
+1013   4                          Drv_DpRx_Reset(DP_RX_FIFO_RST);
+1014   4                          printLT(PRINT_PRIO_HIG, "\nDe-skew err");
+1015   4                          Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+1016   4                      }
+1017   3                      else
+1018   3                      {
+1019   4                          Mod_DpRx_SetState(STATE_DPRX_DEPACKET_CHECK_10);
+1020   4                          
+1021   4                      }
+1022   3                  }
+1023   2                  break;
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 18  
+
+1024   2      
+1025   2              case STATE_DPRX_DEPACKET_CHECK_10:
+1026   2                  if(g_stDpRx.b1RxStateChanged == TRUE)
+1027   2                  {
+1028   3                      #if ((DPRX_FEC_SUPPORT == ENABLED)||(DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPASS_SU
+             -PPORT == ENABLED))
+                              Drv_DpRx_FecSoftModeSet(FALSE);//hardmode
+                              #endif
+1031   3                      #if (DPRX_TIMING_HBE == ENABLED)
+                              g_stDpRx.b2IsTimingHBE = HBE_NONE;
+                              #endif
+1034   3                      //remove sdp reset
+1035   3                      //SDP reset is needed in case of Depacket error
+1036   3                      //必须要保留
+1037   3                      Drv_DpRx_Reset(DP_RX_SDP_RST);//
+1038   3                      Drv_DpRx_Reset(DP_RX_PCR_RST);//New for TEST
+1039   3                      #if DPRX_DSC_DEC_SUPPORT == ENABLED
+                              Drv_DpRxDscDec_Init();
+                              #endif
+1042   3                      #if DPRX_DSC_BYPASS_SUPPORT == ENABLED
+                              Drv_DpRxDscBy_Init();
+                              #endif
+1045   3                      g_stDpRx.b1RxStateChanged = FALSE;
+1046   3                      Mod_DpRx_EccErrAbnormalHdl(DISABLED);
+1047   3                      Drv_DpRx_EccErrorCheck();
+1048   3                      Ocm_Timer_UpdLocalTime(&ulCurrentTime);            
+1049   3                  }
+1050   2                  if(Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_100) == TRUE)
+1051   2                  {
+1052   3                      if(Drv_DpRx_EccErrorCheck() == FAIL)
+1053   3                      {
+1054   4                          Mod_DpRx_EccErrAbnormalHdl(ENABLED);
+1055   4                          Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+1056   4                      }
+1057   3                      else
+1058   3                      {
+1059   4                          Mod_DpRx_SetState(STATE_DPRX_MSA_CHECK_11);
+1060   4                      }
+1061   3                  }
+1062   2                  break;
+1063   2      
+1064   2              case STATE_DPRX_MSA_CHECK_11:
+1065   2                  if (g_stDpRx.b1RxStateChanged == TRUE)
+1066   2                  {
+1067   3                      Drv_Sys_DecPowerDomain(FALSE);
+1068   3                      Drv_DpRx_MsaPktDetEn();
+1069   3                      Drv_DpRx_420DetectMode(SOFTMODE);
+1070   3                      g_stDpRx.ucPixelEncoding     = 0xff;
+1071   3                      g_stDpRx.ucColorimetryFormat = 0xff;
+1072   3                      g_stDpRx.ucBitDepth          = 0xff;
+1073   3                      #if (DPRX_TIMING_HBE == ENABLED)
+                              g_stDpRx.b2IsTimingHBE       = HBE_NONE;
+                              #endif
+1076   3                      g_stDpRx.usHotal             = 0;
+1077   3                      g_stDpRx.usHactive           = 0;
+1078   3                      g_stDpRx.b1RxStateChanged    = FALSE;
+1079   3                      g_stDpRx.b1VscPkg = 0x00;
+1080   3                      
+1081   3                  }
+1082   2                  Mod_DpRx_PcrColorSpaceUpdate();
+1083   2                  if(Mod_DpRx_PcrMsaUpdate() == FALSE)
+1084   2                  {             
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 19  
+
+1085   3                      if (Drv_DpRx_DscDecState() == ENABLED)
+1086   3                      {                  
+1087   4                          #if DPRX_DSC_DEC_SUPPORT == ENABLED                   
+                                  Drv_DpRxDscDec_RxInit();
+                                  Drv_DpRxDscDec_ParaInit();
+                                  #endif
+1091   4                          #if DPRX_DSC_BYPASS_SUPPORT == ENABLED
+              //                    Drv_DpRxDscBy_RxInit();
+                                  Drv_DpRxDscBy_ParaInit();
+                                  #endif                    
+1095   4                                              g_stDpRx.b1CompressedStream = ENABLED;
+1096   4                          Mod_DpRx_SetState(STATE_DPRX_PPS_CHECK_12);
+1097   4                      }
+1098   3                      else
+1099   3                      {
+1100   4                          #if DPRX_TIMING_HBE == ENABLED
+                                  if(Chip_DpRx_JudgeTimingHBE() != HBE_NONE)
+                                  {
+                                      Chip_DpRx_TimingHBE();
+                                  }
+                                  else
+                                  {
+                                      ;
+                                  }
+                                  #endif
+1110   4                          Drv_Sys_DecPowerDomain(TRUE);
+1111   4                                              g_stDpRx.b1CompressedStream = DISABLED;
+1112   4                          Mod_DpRx_SetState(STATE_DPRX_PCR_CONFIG_13); 
+1113   4                      }
+1114   3                  }
+1115   2                  break;
+1116   2              #if ((DPRX_DSC_DEC_SUPPORT == ENABLED)||(DPRX_DSC_BYPASS_SUPPORT == ENABLED))
+                      case STATE_DPRX_PPS_CHECK_12:
+                          if (g_stDpRx.b1RxStateChanged == TRUE)
+                          {           
+                              if(Drv_System_IntFlagGet(IRQ_DPRX_PPS_PKT_INT) == TRUE)
+                              {
+                                  ucTryToLoadPPS = 0x80;
+                              }
+                              else
+                              {
+                                  ucTryToLoadPPS = 0x00;
+                              }
+                              printLT(PRINT_PRIO_HIG, "\nPPSPKT = 0x%02bx",ucTryToLoadPPS);
+                              Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+                              g_stDpRx.b1RxStateChanged = FALSE;
+                                              Drv_System_IntClr(IRQ_DPRX_PPS_PKT_INT);
+                              g_stDpRx.b1DscAbnormal = FALSE;
+                                              b1DscPpsDone = NOT_SUPPORT; 
+              //                ucDscSelect = 0x00;
+                              Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+                          }
+                          if (Ocm_Timer_IsOverFlow(&ulCurrentTime, SECOND_2) == TRUE)
+                          {
+                              if (Drv_DpRx_DscDecState() == ENABLED)
+                              {
+                                  if(Drv_DpRx_PpsInfoCheck() == FAIL)
+                                  {
+                                      g_stDpRx.b1DscAbnormal = TRUE;
+                                      Mod_DpRx_SetState(STATE_DPRX_WAIT_SOURCE_3); //Typec Rx CC is done or dp is ok cc 
+             -is open 09           
+                                      Mod_DpRx_HpdLowAction();
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 20  
+
+                                      g_stDpRx.b1SourceDet = LOW;
+                                      Mod_DpRx_MsgNotify(DPRX_SOURECE_UNPLUG_EVENT);
+                                  }
+                              }
+                              
+                              //Mod_DpRx_SetState(STATE_DPRX_DEPACKET_CHECK_10);
+                          }
+                          if (Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_1500) == TRUE)
+                          {
+                              if (Drv_DpRx_DscDecState() == ENABLED)
+                              {
+                                  ucTryToLoadPPS |= BIT0_1; 
+                              }
+                              else
+                              {
+                                  ucTryToLoadPPS = 0x00;
+                              }
+                          }
+                          if(Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_5) == TRUE)
+                          {
+              //                printLT(PRINT_PRIO_HIG, "\nSatble = 0x%02bx,0x%02bx",BKF3_DF_REG,BKF3_E2_REG);
+              //                printLT(PRINT_PRIO_HIG, "\nFreq = 0x%02bx,0x%02bx,0x%02bx",BKF3_F8_REG,BKF3_F9_REG,BKF3_
+             -FA_REG);
+              //                Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+                              if ((Drv_DpRx_PpsInfoCheck() == SUCCESS)||(ucTryToLoadPPS == 0x81))
+                              {                  
+                                  if(Mod_DpRx_DecByp_Sel() == 0x00)
+                                  {
+                                      return;
+                                  }
+                                  #if DPRX_DSC_DEC_SUPPORT == ENABLED
+              //                    if(g_stDpRx.ucDscSel == SELDSCDECODE)//DECODEs
+                                  if(Drv_DpRxDscDec_SwitchGet() == ENABLED)
+                                  {
+                                      
+                                      Drv_DpRxDscDec_TimingGet();
+                                      b1DscPpsDone = Drv_DpRxDscDec_DscInfoGet();
+                                      #if DPRX_LINK_CTS == ENABLED
+                                      Drv_DpRx_DscPpsDataChg_IntSet(ENABLED);
+                                      Drv_System_IntSet(IRQ_DPRX_PPS_DATA_CHG, ON);
+                                      #endif
+                                      
+                                  }
+                                  #endif
+                                  #if DPRX_DSC_BYPASS_SUPPORT == ENABLED
+                                  if(Drv_DpRxDscBy_SwitchGet() == ENABLED)
+                                  {           
+                                      Drv_DpRxDscBy_RxInit();
+                                      Drv_DpRxDscBy_TimingGet();
+                                      b1DscPpsDone = Drv_DpRxDscBy_DscInfoGet();
+                                      Mod_DpRx_SetState(STATE_DPRX_PCR_CONFIG_13);
+                                      
+                                  }
+                                  #endif
+                                  if(b1DscPpsDone == CAN_RUNNING)
+                                                      {                       
+                                                              Mod_DpRx_SetState(STATE_DPRX_PCR_CONFIG_13);                    
+                                                      }                                       
+                              }
+                              
+                          }
+                          break;
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 21  
+
+                      #endif
+1208   2              case STATE_DPRX_PCR_CONFIG_13:
+1209   2                  if (g_stDpRx.b1RxStateChanged == TRUE)
+1210   2                  {           
+1211   3                      #if DPRX_DSC_BYPASS_SUPPORT == ENABLED
+                              if(Drv_DpRxDscBy_SwitchGet() == ENABLED)
+                              {
+                                  if (Drv_DpRx_DscDecState() == ENABLED)
+                                  {
+                                      Drv_DpRx_SyncPolSet(ENABLED);
+                                      Drv_DpRxDscBy_ModuleEnable();//first dsc bypass en, then pcr stable
+                                  }
+                              }
+                              #endif
+1221   3                      //no need to check MSA again
+1222   3      //                Mod_DpRx_PcrColorSpaceUpdata();
+1223   3      //                Drv_DpRx_Reset(DP_RX_PCR_RST);
+1224   3                      Drv_DpRx_VidFreqSetCheck(DISABLED);
+1225   3                      Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+1226   3                      printLT(PRINT_PRIO_TEST,"\nWait pcr stable...");
+1227   3                      g_stDpRx.b1RxStateChanged = FALSE;
+1228   3                      ucWaitPcrStableCnt = 0;
+1229   3      //                Drv_DpRx_HsyncPcrErrSet(g_stDpRx);
+1230   3                  }
+1231   2                  Drv_DpRx_VidFreqSetCheck(ENABLED);
+1232   2                  if (Ocm_Timer_IsOverFlow(&ulCurrentTime, MS_100) == TRUE)
+1233   2                  {
+1234   3                      //if (Drv_DpRx_PcrStableCheck() == STABLE)//first pcr stable, then dsc dec
+1235   3                      if((Drv_DpRx_PcrStableCheck() == STABLE)&&(DRV_DpRx_VideoStreamFlag()== TRUE))
+1236   3                      {
+1237   4                          #if DPRX_DSC_DEC_SUPPORT == ENABLED
+                                  if(Drv_DpRxDscDec_SwitchGet() == ENABLED)
+                                  {
+                                      if (Drv_DpRx_DscDecState() == ENABLED)
+                                      {
+                                          Drv_DpRx_SyncPolSet(ENABLED);
+                                          Drv_DpRxDscDec_ModuleEnable();
+                                      }
+                                  }
+                                  #endif
+1247   4                          Mod_DpRx_SetState(STATE_DPRX_HDCP_VER_CHK_14);
+1248   4                      }
+1249   3                      else if(DRV_DpRx_VideoStreamFlag()== FALSE)
+1250   3                      {
+1251   4                          return;
+1252   4                      }
+1253   3                  }
+1254   2                  //in case of PCRPLL unlock issue
+1255   2                  if(Ocm_Timer_IsOverFlow(&ulCurrentTime,MS_500) == TRUE)
+1256   2                  {           
+1257   3                      ucWaitPcrStableCnt++;
+1258   3                      if(ucWaitPcrStableCnt == 10)
+1259   3                      {
+1260   4                          #if REMOVE_UART == DISABLED
+1261   4                          printLT(PRINT_PRIO_HIG, "\nPCR HARD RESET");
+1262   4                          #endif
+1263   4                          #if DPRX_PCRPLL_HRST == DISABLED
+                                  Drv_DpRx_PcrPllRst(ENABLED);
+                                  #endif
+1266   4                          Drv_DpRx_Reset(DP_RX_PCR_RST);
+1267   4                          Ocm_Delay1ms(2);
+1268   4                          #if DPRX_PCRPLL_HRST == DISABLED
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 22  
+
+                                  Drv_DpRx_PcrPllRst(DISABLED);
+                                  #endif
+1271   4                          ucWaitPcrStableCnt = 0;
+1272   4                      }
+1273   3                     //DRV_DpRx_VidPcrReset();
+1274   3                     Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+1275   3                  }
+1276   2                  break;
+1277   2      
+1278   2              case STATE_DPRX_HDCP_VER_CHK_14:
+1279   2                  if (g_stDpRx.b1RxStateChanged == TRUE)
+1280   2                  {              
+1281   3                      g_stDpRx.ucHdcpVersion = NO_HDCP;
+1282   3                      g_stDpRx.b1RxStateChanged = FALSE;
+1283   3                      Ocm_Timer_UpdLocalTime(&ulCurrentTime);
+1284   3                      g_stDpRx.ucDscFifoEmpty = Drv_DpRx_DscFifoEmptyGet();
+1285   3                      g_stDpRx.ucDscFifoFull = Drv_DpRx_DscFifoFullGet();
+1286   3                  }
+1287   2                  Mod_DpRx_SetState(STATE_DPRX_AUDIO_INFO_CHK_15);
+1288   2                  break;
+1289   2      
+1290   2              case STATE_DPRX_AUDIO_INFO_CHK_15://0d
+1291   2                  if (g_stDpRx.b1RxStateChanged == TRUE)
+1292   2                  {
+1293   3                      g_stDpRx.b1RxStateChanged = FALSE;
+1294   3                  }
+1295   2                  Mod_DpRx_SetState(STATE_DPRX_PLAY_BACK_16);
+1296   2                  break;
+1297   2      
+1298   2              case STATE_DPRX_PLAY_BACK_16://0d
+1299   2                  Mod_DpRx_ColorimetryUpdata();
+1300   2                  break;
+1301   2      
+1302   2              default:
+1303   2                  break;
+1304   2          }
+1305   1      }
+1306          
+1307          void Mod_DpRx_Handler(void)
+1308          {
+1309   1          Mod_DpRx_SourceDetProc();
+1310   1          Mod_DpRx_StateJudge();
+1311   1          Mod_DpRx_StateHandler();
+1312   1          #if DPRX_MST_MODE_EN == ENABLED
+                  Mod_DpRx_MstHandler();
+                  #endif
+1315   1      }
+1316          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2901    ----
+   CONSTANT SIZE    =    512    ----
+   XDATA SIZE       =     49      86
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+C51 COMPILER V9.60.0.0   MODDPRX                                                           11/11/2025 13:52:35 PAGE 23  
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

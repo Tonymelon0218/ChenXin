@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "name": "Target 1",
+            "includePath": [
+                "d:\\VVY\\Lontium\\04.客户\\C\\晨芯\\6911GXD\\LT2204_FVB_Code_U1_20250603_PATTERNDSC\\User\\L0_App",
+                "d:\\VVY\\Lontium\\04.客户\\C\\晨芯\\6911GXD\\LT2204_FVB_Code_U1_20250603_PATTERNDSC\\User\\L1_Module",
+                "d:\\VVY\\Lontium\\04.客户\\C\\晨芯\\6911GXD\\LT2204_FVB_Code_U1_20250603_PATTERNDSC\\User\\L2_Drive",
+                "d:\\VVY\\Lontium\\04.客户\\C\\晨芯\\6911GXD\\LT2204_FVB_Code_U1_20250603_PATTERNDSC\\User\\L3_Ocm",
+                "d:\\VVY\\Lontium\\04.客户\\C\\晨芯\\6911GXD\\LT2204_FVB_Code_U1_20250603_PATTERNDSC\\Startup",
+                "d:\\VVY\\Lontium\\04.客户\\C\\晨芯\\6911GXD\\LT2204_FVB_Code_U1_20250603_PATTERNDSC\\Keil_51\\Objects",
+                "d:\\VVY\\Lontium\\04.客户\\C\\晨芯\\6911GXD\\LT2204_FVB_Code_U1_20250603_PATTERNDSC\\Keil_51"
+            ],
+            "defines": [
+                "__C51__",
+                "__VSCODE_C51__",
+                "reentrant=",
+                "compact=",
+                "small=",
+                "large=",
+                "data=",
+                "idata=",
+                "pdata=",
+                "bdata=",
+                "xdata=",
+                "code=",
+                "bit=char",
+                "sbit=char",
+                "sfr=char",
+                "sfr16=int",
+                "sfr32=int",
+                "interrupt=",
+                "using=",
+                "_at_=",
+                "_priority_=",
+                "_task_="
+            ],
+            "intelliSenseMode": "${default}"
+        }
+    ],
+    "version": 4
+}
